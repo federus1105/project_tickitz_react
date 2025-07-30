@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import '../styles/Login.css'
+import "../styles/Login.css";
 
 function Login() {
-const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorem, setErrorem] = useState("");
   const [errorpass, setErrorPass] = useState("");
   const [alertMsg, setAlertMsg] = useState("")
-
 
   // regex untuk email
   const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/;
@@ -31,34 +30,21 @@ const [email, setEmail] = useState("");
     }
     // Validasi Password
     if (password.trim() === ``) {
-      setErrorPass("Password tidak boleh kosong")
+      setErrorPass("Password tidak boleh kosong");
     } else if (password.length < 8) {
       setErrorPass("Minimal harus 8 karakter");
     } else if (!RegexKecil.test(password)) {
-      setErrorPass ("Minimal harus ada huruf kecil")
+      setErrorPass("Minimal harus ada huruf kecil");
     } else if (!RegexBesar.test(password)) {
-      setErrorPass("Harus ada huruf Besar")
+      setErrorPass("Harus ada huruf Besar");
     } else if (!Spesial.test(password)) {
-      setErrorPass("harus ada karakter spesial !@#$%^&*/<>")
+      setErrorPass("harus ada karakter spesial !@#$%^&*/<>");
     } else {
       /* Jika input email benar tetapi password salah, input email tidak akan
   muncul di console harus kedua nya benar */
       setErrorem("");
       setErrorPass("");
-
-      // Simpan ke localStorage
-      // localStorage.setItem(
-      //   "user",
-      //   JSON.stringify({
-      //     email: email,
-      //     password: password,
-      //   })
-      // );
-
-      // console.log("\nEmail:", email); 
-      // console.log("Password:", password);
-
-      // window.location.href = "sign-in.html";
+      
     }
     const storedUser = JSON.parse(localStorage.getItem("user"))
     if (!storedUser) {
@@ -68,13 +54,13 @@ const [email, setEmail] = useState("");
     if (email === storedUser.email && password === storedUser.password) {
       setAlertMsg("Login berhasil!");
       setTimeout(() => {
-        window.location.href = "index.html";
+        window.location.href = "#";
       }, 1200);
     } else {
       setAlertMsg("Email atau password salah!");
     }
   }
-  
+
   return (
     <>
       <div className="img">
@@ -91,14 +77,14 @@ const [email, setEmail] = useState("");
 
         <form onSubmit={submitHandler}>
           {alertMsg && (
-            <div
+            <span
               style={{
                 color: alertMsg === "Login berhasil!" ? "green" : "red",
                 marginBottom: "12px",
               }}
             >
               {alertMsg}
-            </div>
+            </span>
           )}
           <section>
             <label className="em">Email</label>
@@ -110,10 +96,8 @@ const [email, setEmail] = useState("");
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
-                style={{
-                }}
               />
-              <p id="errorem">{errorem}</p>
+              <span id="errorem">{errorem}</span>
             </div>
             <label className="pw">Password</label>
             <div className="input">
@@ -123,7 +107,7 @@ const [email, setEmail] = useState("");
                 id="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <p id="errorpass">{errorpass}</p>
+              <span id="errorpass">{errorpass}</span>
             </div>
           </section>
 
@@ -132,10 +116,15 @@ const [email, setEmail] = useState("");
               Forgot your Password?
             </a>
           </section>
+          <section>
+            <a href="#" className="forget">
+              Register
+            </a>
+          </section>
 
           <section>
-            <button className="button">
-              <a href="#">Join for free Now</a>
+            <button type="submit" className="button">
+              Join for free Now
             </button>
           </section>
         </form>
@@ -158,6 +147,5 @@ const [email, setEmail] = useState("");
     </>
   );
 }
-
 
 export default Login;
