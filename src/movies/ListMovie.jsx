@@ -20,7 +20,6 @@ function PopularMovies() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Ambil genre
         const genreRes = await fetch(
           `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`
         );
@@ -38,10 +37,10 @@ function PopularMovies() {
       <header>
         <div>
           <img src="/src/public/image 1.png" alt="" className="brightness-50" />
-          <p className="text-[15px]  text-white absolute top-53 pl-30">
+          <p className="text-[15px]  text-white absolute top-53 pl-30 max-lg:text-xs max-lg:top-36">
             LIST MOVIE OF THE WEEK
           </p>
-          <h1 className="text-[50px] text-white absolute left-29 top-61">
+          <h1 className="text-[50px] text-white absolute left-29 top-61 max-lg:text-[30px] max-lg:top-40">
             Experience the Magic of
             <br />
             Cinema: Book Your Tickets
@@ -49,17 +48,19 @@ function PopularMovies() {
             Today
           </h1>
           <div id="oval" className="">
-            <div className="absolute w-[7px] h-[7px] bg-white top-133 left-175 rounded-full"></div>
-            <div></div>
-            <div></div>
+            <div className="absolute w-[7px] h-[7px] bg-white top-133 left-175 rounded-full max-lg:top-86 max-lg:left-105"></div>
+            <div className="absolute w-[7px] h-[7px] bg-white top-133 left-170 rounded-full max-lg:top-86 max-lg:left-100"></div>
+            <div className="absolute w-[50px] h-[7px] bg-blue-700 top-133 left-155 rounded-full max-lg:top-86 max-lg:left-83"></div>
           </div>
         </div>
       </header>
       <main className="ml-28 mr-28">
         <section>
           <p className="pt-10">Cari Event</p>
-          <div id="search" className="flex pt-2 pb-10 gap-3.5">
-            {/* <p className="relative left-66">Filter</p> */}
+          <div
+            id="search"
+            className="flex pt-2 pb-10 gap-3.5 max-lg:pb-5 max-lg:flex max-lg:flex-col"
+          >
             <div>
               <img
                 src="/src/public/Search.png"
@@ -69,7 +70,7 @@ function PopularMovies() {
               <input
                 type="text"
                 placeholder="New Born Expert"
-                className="border-1 border-gray-400 rounded-md py-3 pl-15"
+                className="border-1 border-gray-400 rounded-md py-3 pl-15 "
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -84,7 +85,7 @@ function PopularMovies() {
                         prev === genre.id ? null : genre.id
                       )
                     }
-                    className={`cursor-pointer ml-7 pt-2 hover:border-b-3 ${
+                    className={`cursor-pointer ml-7 pt-2 hover:border-b-3 max-lg:mx-3 ${
                       selectedGenre === genre.id
                         ? "border-b-4 border-blue-600"
                         : ""
