@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
 import HamburgerMenu from "./Hamburger";
+import { logout } from "../redux/slice/authSlice";
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, SetIsLoggedIn] = useState(false);
+  const currentUser = useSelector((state) => state.auth.currentUser);
   const [showDropdown, setShowDropdown] = useState(false);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setIsLoggedIn(!!user);
-  }, []);
+  const dispatch = useDispatch();
+  const Navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.reload();
+    dispatch(logout());
+    Navigate("../movies/");
   };
+
   const toggleDropdown = () => {
     setShowDropdown((prev) => !prev);
   };
@@ -30,7 +31,7 @@ function Navbar() {
       </div>
       {/* Auth Buttons / Profile */}
       <div className="hidden lg:flex gap-4 items-center">
-        {!isLoggedIn ? (
+        {!currentUser ? (
           <>
             <button className="border border-blue-700 rounded-sm px-4 py-2 text-blue-700">
               <Link to="/auth/login">Signin</Link>
@@ -41,6 +42,7 @@ function Navbar() {
           </>
         ) : (
           <div className="flex items-center gap-1">
+            <p className="pr-1">Halo! {currentUser.email.split("@")[0]} 😄</p>
             <div className="relative">
               <img
                 src="/src/public/Ellipse 11.svg"
