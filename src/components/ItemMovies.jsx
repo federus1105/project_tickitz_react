@@ -68,7 +68,7 @@ function ItemMovies({ selectedGenre, searchTerm, page }) {
   });
 
   return (
-    <section id="three_image" className="grid grid-cols-4 gap-10 mb-11">
+    <section id="three_image" className="grid grid-cols-4 gap-10 mb-11 max-lg:grid-cols-2">
       {filteredMovies.map((film) => (
         <article className="rounded-lg shadow-xl p-4" key={film.id}>
           <Link to={`../detailmovies/${film.id}`}>
