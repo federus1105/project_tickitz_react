@@ -4,6 +4,7 @@ import HamburgerMenu from "./Hamburger";
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -14,9 +15,12 @@ function Navbar() {
     localStorage.removeItem("user");
     window.location.reload();
   };
+  const toggleDropdown = () => {
+    setShowDropdown((prev) => !prev);
+  };
 
   return (
-    <nav className="sticky top-0 z-10 h-25 px-27 backdrop-filter backdrop-blur-xl flex items-center justify-between">
+    <nav className="sticky top-0 z-10 h-25 px-26 backdrop-filter backdrop-blur-xl flex items-center justify-between">
       <img src="/src/public/Tickitz 1.png" className="" alt="logo" />
       {/* Menu untuk layar besar */}
       <div className="hidden lg:flex gap-10">
@@ -37,26 +41,34 @@ function Navbar() {
           </>
         ) : (
           <div className="flex items-center gap-1">
-            <p>Location</p>
-            <img src="/src/public/dropdown.svg" alt="" />
-            <img src="/src/public/bx_bx-search.svg" alt="" />
-            <Link to="./profilpage">
+            <div className="relative">
               <img
                 src="/src/public/Ellipse 11.svg"
                 alt="profile"
                 className="w-10 h-10 cursor-pointer"
+                onClick={toggleDropdown}
               />
-            </Link>
-            <div
-              onClick={handleLogout}
-              className="border border-blue-700 text-blue-700 px-4 py-1 rounded-full cursor-pointer"
-            >
-              Logout
+              {showDropdown && (
+                <div className="absolute right-2.5 mt-2 w-40 bg-white shadow-lg rounded-md z-20">
+                  <Link
+                    to="./profilpage"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Profile
+                  </Link>
+                  <div
+                    onClick={handleLogout}
+                    className="block px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Logout
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
       </div>
-      <HamburgerMenu isLoggedIn={isLoggedIn} handleLogout={handleLogout} />{" "}
+      <HamburgerMenu isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
     </nav>
   );
 }
