@@ -1,63 +1,53 @@
-import React, { useState } from "react";
-import { Link } from "react-router";
+import React, {useState} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
+import { login } from "../redux/slice/authSlice";
+import useAuth from "../hooks/useAuth";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorem, setErrorem] = useState("");
-  const [errorpass, setErrorPass] = useState("");
-  const [alertMsg, setAlertMsg] = useState("");
-
-  // regex untuk email
-  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/;
-  // regex untuk huruf kecil
-  const RegexKecil = /[a-z]/;
-  // regex untuk huruf besar
-  const RegexBesar = /[A-Z]/;
-  // regex untuk karakter spesial
-  const Spesial = /[!@#$%^&*/><]/;
+    const dispatch = useDispatch();
+    const Navigate = useNavigate();
+    const users = useSelector((state) => state.auth.users)
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    errorem,
+    setErrorem,
+    errorpass,
+    setErrorPass,
+    alertMsg,
+    setAlertMsg,
+    Validate,
+  } = useAuth();
 
   function submitHandler(event) {
     event.preventDefault();
-
-    // Validasi Email
-    if (email.trim() === ``) {
-      setErrorem("Email tidak boleh kosong");
-    } else if (!re.test(email)) {
-      setErrorem("Format Email salah");
-    } else {
-      setErrorem("");
-    }
-    // Validasi Password
-    if (password.trim() === ``) {
-      setErrorPass("Password tidak boleh kosong");
-    } else if (password.length < 8) {
-      setErrorPass("Minimal harus 8 karakter");
-    } else if (!RegexKecil.test(password)) {
-      setErrorPass("Minimal harus ada huruf kecil");
-    } else if (!RegexBesar.test(password)) {
-      setErrorPass("Harus ada huruf Besar");
-    } else if (!Spesial.test(password)) {
-      setErrorPass("harus ada karakter spesial !@#$%^&*/<>");
-    } else {
-      /* Jika input email benar tetapi password salah, input email tidak akan
-    muncul di console harus kedua nya benar */
-      setErrorem("");
-      setErrorPass("");
-    }
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (!storedUser) {
-      setAlertMsg("Belum ada akun. Silakan register.");
-      return;
-    }
-    if (email === storedUser.email && password === storedUser.password) {
-      setAlertMsg("Login berhasil!");
-      setTimeout(() => {
-        window.location.href = "/movies/profilpage";
-      }, 1200);
+    dispatch(login({email, password}))
+    // if(!Validate()) return
+    const isValid = users.find(
+      (u) => u.email === email && u.password === password
+    )
+    if (isValid) {
+      Navigate("/movies/profilpage");
     } else {
       setAlertMsg("Email atau password salah!");
     }
+
+    // const storedUser = JSON.parse(localStorage.getItem("user"));
+    // if (!storedUser) {
+    //   setAlertMsg("Belum ada akun. Silakan register.");
+    //   return;
+    // }
+    // if (email === storedUser.email && password === storedUser.password) {
+    //   setAlertMsg("Login berhasil!");
+    //   setTimeout(() => {
+    //     window.location.href = "/movies/profilpage";
+    //   }, 1000);
+    // } else {
+    //   setAlertMsg("Email atau password salah!");
+    // }
   }
 
   return (
@@ -136,10 +126,7 @@ function Login() {
               </a>
             </section>
             <section>
-              <Link
-                to={`../`}
-                className="flex justify-end text-blue-700"
-              >
+              <Link to={`../`} className="flex justify-end text-blue-700">
                 Register
               </Link>
             </section>
