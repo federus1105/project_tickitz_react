@@ -1,69 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import useAuth from "../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { register } from "../redux/slice/authSlice";
 
 function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorem, setErrorem] = useState("");
-  const [errorpass, setErrorPass] = useState("");
-  const [alertMsg, setAlertMsg] = useState("");
-
-  // regex untuk email
-  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/;
-  // regex untuk huruf kecil
-  const RegexKecil = /[a-z]/;
-  // regex untuk huruf besar
-  const RegexBesar = /[A-Z]/;
-  // regex untuk karakter spesial
-  const Spesial = /[!@#$%^&*/><]/;
+  const dispatch = useDispatch();
+  const Navigate = useNavigate();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    errorem,
+    setErrorem,
+    errorpass,
+    setErrorPass,
+    alertMsg,
+    setAlertMsg,
+    Validate,
+  } = useAuth();
 
   function submitHandler(event) {
     event.preventDefault();
-
-    // Validasi Email
-    if (email.trim() === ``) {
-      setErrorem("Email tidak boleh kosong");
-    } else if (!re.test(email)) {
-      setErrorem("Format Email salah");
-    } else {
-      setErrorem("");
-    }
-    // Validasi Password
-    if (password.trim() === ``) {
-      setErrorPass("Password tidak boleh kosong");
-    } else if (password.length < 8) {
-      setErrorPass("Minimal harus 8 karakter");
-    } else if (!RegexKecil.test(password)) {
-      setErrorPass("Minimal harus ada huruf kecil");
-    } else if (!RegexBesar.test(password)) {
-      setErrorPass("Harus ada huruf Besar");
-    } else if (!Spesial.test(password)) {
-      setErrorPass("harus ada karakter spesial !@#$%^&*/<>");
-    } else {
-      /* Jika input email benar tetapi password salah, input email tidak akan
-  muncul di console harus kedua nya benar */
-      setErrorem("");
-      setErrorPass("");
-
-      // Simpan ke localStorage
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          email: email,
-          password: password,
-        })
-      );
-
-      console.log("\nEmail:", email);
-      console.log("Password:", password);
-
-      if (email) {
-        setAlertMsg("akun berhasil dibuat");
-      }
-      window.location.href = "/auth/login";
+    if (email && password) {
+      dispatch(register({ email, password }));
+      Navigate("/auth/login");
     }
   }
-  useEffect(() => {});
+
   return (
     <>
       <div className="bg-[url(public/avengers.png)] flex flex-col justify-center items-center h-full">
@@ -75,7 +39,7 @@ function Register() {
         </div>
 
         <main className="rounded-lg w-110 h-159 bg-white flex flex-col py-7 px-15">
-          <header className="flex justify-around mb-[20px]">
+          <header className="flex justify-around mb-[10px]">
             <div className="relative text-center">
               <div className="w-[40px] h-[40px] bg-gray-400 text-white flex items-center justify-center rounded-full mb-[5px]">
                 1
@@ -103,6 +67,17 @@ function Register() {
           </header>
 
           <form onSubmit={submitHandler}>
+            <span
+              className={`block min-h-[0.5rem] px-2 py-1 rounded ${
+                alertMsg === "akun berhasil dibuat"
+                  ? "bg-green-100 text-green-700"
+                  : alertMsg
+                  ? "bg-red-100 text-red-700"
+                  : ""
+              }`}
+            >
+              {alertMsg || "\u00A0"}
+            </span>
             <section>
               <label className="">Email</label>
               <div className="input">
@@ -111,10 +86,10 @@ function Register() {
                   type="text"
                   placeholder="Enter your Email"
                   id="email"
+                  value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
-                  value={email}
                 />
                 <span
                   id="errorem"
