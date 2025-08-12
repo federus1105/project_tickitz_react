@@ -1,9 +1,9 @@
-
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slice/authSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // default: localStorage
 import { combineReducers } from "redux";
+import orderReducer from "./slice/orderSlice";
 
 const persistConfig = {
   key: "user",
@@ -12,6 +12,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: userReducer,
+  order: orderReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
