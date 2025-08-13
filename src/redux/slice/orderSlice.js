@@ -1,4 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { createSelector } from "@reduxjs/toolkit";
+
+
+// untuk data Kursi
+export const selectSelectedSeats = createSelector(
+  (state) => state.order.bookingInfo.selectedSeat,
+  (selectedSeat) => selectedSeat
+);
+
+// untuk data Total kursi
+export const selectTotalPrice = createSelector(
+  (state) => state.order.bookingInfo,
+  (bookingInfo) => bookingInfo.selectedSeat.length * bookingInfo.pricePerSeat
+);
+
 
 const initialState = {
   selectedMovie: null,
@@ -7,16 +22,17 @@ const initialState = {
     date: "",
     time: "",
     location: "",
-    seat: [],
+    selectedSeat: [],
+    pricePerSeat: 10,
   },
 };
 
-const OrderSlice = createSlice({
+const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
     setCinema: (state, action) => {
-      state.cinema = action.payload
+      state.cinema = action.payload;
     },
     setSelectedMovie: (state, action) => {
       state.selectedMovie = action.payload;
@@ -24,29 +40,39 @@ const OrderSlice = createSlice({
     setBookingInfo: (state, action) => {
       state.bookingInfo = { ...state.bookingInfo, ...action.payload };
     },
-    addSeat: (state, action) => {
-      if (!state.bookingInfo.seat.includes(action.payload)) {
-        state.bookingInfo.seat.push(action.payload);
+    toggleSeat: (state, action) => {
+      const seat = action.payload;
+      const seatList = state.bookingInfo.selectedSeat;
+      if (seatList.includes(seat)) {
+        state.bookingInfo.selectedSeat = seatList.filter((s) => s !== seat);
+      } else {
+        state.bookingInfo.selectedSeat.push(seat);
       }
     },
-    removeSeat: (state, action) => {
-      state.bookingInfo.seat = state.bookingInfo.seat.filter(
-        (seat) => seat !== action.payload
-      );
+    clearSeats: (state) => {
+      state.selectedSeat = [];
     },
-    cleearSelectedMovie: (state) => {
-      state.selectedMovie = null;
-      state.bookingInfo = {date: "", time: "", location:""}
-    },
+    // clearSelectedMovie: (state) => {
+    //   state.selectedMovie = null;
+    //   state.bookingInfo = {
+    //     cinema: null,
+    //     date: "",
+    //     time: "",
+    //     location: "",
+    //     selectedSeat: [],
+    //     pricePerSeat: 10,
+    //   };
+    // },
   },
 });
 
 export const {
   setCinema,
   setSelectedMovie,
-  cleearSelectedMovie,
+  clearSelectedMovie,
   setBookingInfo,
-  addSeat,
-  removeSeat,
-} = OrderSlice.actions;
-export default OrderSlice.reducer;
+  toggleSeat,
+  clearSeats,
+} = orderSlice.actions;
+
+export default orderSlice.reducer;
