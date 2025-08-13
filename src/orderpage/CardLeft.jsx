@@ -1,37 +1,61 @@
-import React from 'react'
+import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector} from "react-redux";
+import {
+  selectSelectedSeats,
+  selectTotalPrice,
+} from "../redux/slice/orderSlice";
 
 function CardLeft() {
+  const movie = useSelector((state) => state.order.selectedMovie);
+  const bookingInfo = useSelector((state) => state.order.bookingInfo);
+  const cinema = useSelector((state) => state.order.cinema);
+  const selectedSeats = useSelector(selectSelectedSeats);
+    const seatPrice = useSelector(selectTotalPrice);
   return (
     <>
-      <section className="bg-white h-full rounded-md">
+      <section className="bg-white h-full w-110 rounded-md">
         <div className="px-4">
           <div className="pt-5 pb-10 flex flex-col justify-center items-center">
-            <img src="/src/public/CineOne21.svg" alt="" />
-            <p className="text-3xl">CineOne21 Cinema</p>
+            <img src={cinema.img} alt={cinema} />
+            <p className="text-3xl">{cinema} Cinema</p>
           </div>
-          <div className="grid grid-cols-2 pb-10">
-            <div className="flex flex-col gap-4">
+          <div className="grid grid-rows-4 h-45 mb-10">
+            {/* <div className="flex flex-col gap-4"> */}
+            <div className="grid grid-cols-2">
               <p>Movie Selected</p>
-              <p>Tuesday, 07 July 2020</p>
-              <p>One ticket price</p>
-              <p>Seat choosed</p>
+              <p className="flex justify-end">
+                {movie.title.substring(0, 12)}...
+              </p>
             </div>
-            <div className="flex flex-col items-end gap-4">
-              <p>Spider-Man: Homecoming</p>
-              <p>13:00pm</p>
-              <p>$10</p>
-              <p>C4, C5, C6</p>
+            <div className="grid grid-cols-2">
+              <p className="">
+                {new Date(bookingInfo.date).toLocaleDateString("en-GB", {
+                  weekday: "long",
+                  // year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+              <p className="flex justify-end ">{bookingInfo.time}</p>
+            </div>
+            <div className="grid grid-cols-2">
+              <p>One ticket price</p>
+              <p className="flex justify-end">$10</p>
+            </div>
+            <div className="grid grid-cols-2 ">
+              <p>Seat choosed</p>
+              <p className="inline text-wrap max-w-50 text-end  ">{selectedSeats.join(", ")}</p>
             </div>
           </div>
           <hr className="border-gray-400 border-t-2" />
           <div className="pt-7 flex text-xl gap-53.5 pb-15">
             <h3>Total Payment</h3>
-            <p className="font-bold text-blue-700">$30</p>
+            <p className="font-bold text-blue-700">${seatPrice}</p>
           </div>
         </div>
         <Link to="../paymentmodal">
-          <button className="bg-blue-700 w-101 h-12 text-white rounded-md mt-10 absolute cursor-pointer hover:bg-blue-500 ">
+          <button className="bg-blue-700 w-110 h-12 text-white rounded-md mt-10 absolute cursor-pointer hover:bg-blue-500 ">
             Checkout now
           </button>
         </Link>
@@ -40,4 +64,4 @@ function CardLeft() {
   );
 }
 
-export default CardLeft
+export default CardLeft;
