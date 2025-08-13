@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createSelector } from "@reduxjs/toolkit";
 
-
 // untuk data Kursi
 export const selectSelectedSeats = createSelector(
   (state) => state.order.bookingInfo.selectedSeat,
@@ -14,16 +13,17 @@ export const selectTotalPrice = createSelector(
   (bookingInfo) => bookingInfo.selectedSeat.length * bookingInfo.pricePerSeat
 );
 
-
 const initialState = {
   selectedMovie: null,
   bookingInfo: {
-    cinema: null,
     date: "",
     time: "",
     location: "",
     selectedSeat: [],
     pricePerSeat: 10,
+    payment: null,
+    fullname: "",
+    phone: "",
   },
 };
 
@@ -52,27 +52,19 @@ const orderSlice = createSlice({
     clearSeats: (state) => {
       state.selectedSeat = [];
     },
-    // clearSelectedMovie: (state) => {
-    //   state.selectedMovie = null;
-    //   state.bookingInfo = {
-    //     cinema: null,
-    //     date: "",
-    //     time: "",
-    //     location: "",
-    //     selectedSeat: [],
-    //     pricePerSeat: 10,
-    //   };
-    // },
+    setPayment: (state, action) => {
+      state.payment = action.payload;
+    },
   },
 });
 
 export const {
   setCinema,
   setSelectedMovie,
-  clearSelectedMovie,
   setBookingInfo,
   toggleSeat,
   clearSeats,
+  setPayment,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;
