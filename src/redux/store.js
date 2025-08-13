@@ -6,7 +6,7 @@ import { combineReducers } from "redux";
 import orderReducer from "./slice/orderSlice";
 
 const persistConfig = {
-  key: "user",
+  key: "root",
   storage,
 };
 
