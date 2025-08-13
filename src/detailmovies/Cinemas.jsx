@@ -1,15 +1,25 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setCinema } from "../redux/slice/orderSlice";
 
 const cinemas = [
   { name: "EBV.id", img: "/src/public/ebv.id.png" },
-  { name: "Hiflix", img: "/src/public/hiflix3.png" },
-  { name: "CineOne", img: "/src/public/cineone.png" },
-  { name: "EBV", img: "/src/public/ebv.id.png" },
+  { name: "Hiflix", img: "/src/public/hiflix 2.png" },
+  { name: "CineOne21", img: "/src/public/cineone.png" },
+  { name: "Cinepolis", img: "/src/public/cinepolis.png" },
 ];
 
 export default function Cinemas() {
-  const [selectedCinema, setSelectedCinema] = useState("");
-
+  const dispatch = useDispatch();
+  const selectedCinema = useSelector((state) => state.order.cinema);
+  const [showPopup, setShowPopup] = useState(false);
+  // const [selectedCinema, setSelectedCinema] = useState("");
+  const handleContinuw = () => {
+    if (!selectedCinema) {
+      setShowPopup(true);
+      return;
+    }
+  };
   return (
     <section>
       <div className="flex gap-8 mt-10 items-center">
@@ -29,8 +39,8 @@ export default function Cinemas() {
               type="radio"
               name="cinema"
               value={cinema.name}
-              checked={selectedCinema === cinema.name}
-              onChange={() => setSelectedCinema(cinema.name)}
+              checked={selectedCinema?.name === cinema.name}
+              onChange={() => dispatch(setCinema(cinema.name))}
               className="hidden"
             />
             <img
