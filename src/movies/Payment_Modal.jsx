@@ -1,9 +1,22 @@
 import React, { useState } from "react";
 import Modal from "../modal/Modal";
 import Payment from "../modal/Payment";
+import { useSelector } from "react-redux";
+import {
+  selectSelectedSeats,
+  selectTotalPrice,
+} from "../redux/slice/orderSlice";
 
 function Payment_Modal() {
+  const movie = useSelector((state) => state.order.selectedMovie);
+  const bookingInfo = useSelector((state) => state.order.bookingInfo);
+  const cinema = useSelector((state) => state.order.cinema);
+  const selectedSeats = useSelector(selectSelectedSeats);
+  const seatPrice = useSelector(selectTotalPrice);
+  const currentUser = useSelector((state) => state.auth.currentUser);
+
   const [Active, SetActive] = useState(false);
+
   return (
     <>
       <main className=" bg-gray-200">
@@ -60,80 +73,107 @@ function Payment_Modal() {
               <div id="grid" className="grid grid-rows-5 gap-5">
                 <div>
                   <h4 className="text-gray-400 pb-2.5">DATE & TIME</h4>
-                  <p className="pb-2">Tuesday, 07 July 2020 at 02:00pm</p>
+                  <p className="pb-2">
+                    {new Date(bookingInfo.date).toLocaleDateString("en-GB", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}{" "}
+                    at {bookingInfo.time}
+                  </p>
                   <hr />
                 </div>
                 <div>
                   <h4 className="text-gray-400 pb-2.5">MOVIE TITLE</h4>
-                  <p className="pb-2">Spider-Man: Homecoming</p>
+                  <p className="pb-2">{movie.title}</p>
                   <hr />
                 </div>
                 <div>
                   {Active && <Modal />}
                   <h4 className="text-gray-400 pb-2.5">CINEMA NAME</h4>
-                  <p className="pb-2">CineOne21 Cinema</p>
+                  <p className="pb-2">{cinema?.name} Cinema</p>
                   <hr />
                 </div>
                 <div>
                   <h4 className="text-gray-400 pb-2.5">NUMBER OF TICKETS</h4>
-                  <p className="pb-2">3 pieces</p>
+                  <p className="pb-2">{selectedSeats.length} Pcs</p>
                   <hr />
                 </div>
                 <div>
                   <h4 className="text-gray-400 pb-2.5">TOTAL PAYMENT</h4>
-                  <p className="pb-2 text-blue-700">$30,00</p>
+                  <p className="pb-2 text-blue-700 font-bold">${seatPrice}</p>
                   <hr />
                 </div>
               </div>
-              <div>
-                <div className="pt-15">
-                  <h1 className="font-bold text-3xl">Personal Information</h1>
-                </div>
-                <div className="grid2">
-                  <div>
-                    <p className="pt-5 text-gray-400 pb-2">Full Name</p>
-                    <input
-                      type="text"
-                      name=""
-                      id=""
-                      placeholder="Jonas El Rodriguez"
-                      className="w-full border-1 border-gray-400 h-13 rounded-sm pl-10 text-lg"
-                    />
+              <form>
+                <div>
+                  <div className="pt-15">
+                    <h1 className="font-bold text-3xl pb-5">
+                      Personal Information
+                    </h1>
                   </div>
-                  <div>
-                    <p className="pt-5 text-gray-400 pb-2">Email</p>
-                    <input
-                      type="email"
-                      name=""
-                      id=""
-                      placeholder="jonasrodri123@gmail.com"
-                      className="w-full border-1 border-gray-400 h-13 rounded-sm pl-10 text-lg "
-                    />
-                  </div>
-                  <div>
-                    <p className="pt-5 text-gray-400 pb-2">Phone Number</p>
-                    <input
-                      type="number"
-                      name=""
-                      id=""
-                      placeholder="+62 | 81445687121"
-                      className="w-full border-1 border-gray-400 h-13 rounded-sm pl-10 text-lg "
-                    />
+                  <div className="grid2">
+                    <div>
+                      <label
+                        forhtml="fullname"
+                        className="pt-5 text-gray-400 pb-2"
+                      >
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        name="fullname"
+                        id="fullname"
+                        placeholder="Full Name"
+                        className="w-full border-1 border-gray-400 h-13 rounded-sm pl-10 text-lg mb-5 mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label forhtml="email" className=" text-gray-400 pb-2">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={currentUser.email}
+                        // onChange={(e) => {
+                        //   setEmail(e.target.value);
+                        // }}
+                        className="w-full border-1 border-gray-400 h-13 rounded-sm pl-10 text-lg mb-5 mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        forhtml="phone"
+                        className="pt-5 text-gray-400 pb-2"
+                      >
+                        Phone Number
+                      </label>
+                      <input
+                        type="text"
+                        name="number"
+                        id="number"
+                        placeholder="Phone Number"
+                        className="w-full border-1 border-gray-400 h-13 rounded-sm pl-10 text-lg mt-1"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <Payment />
-              <section>
-                <div className="buttonplay">
-                  <button
-                    id="play"
-                    className="w-full bg-blue-700 h-14 shadow-2xl text-white rounded-sm cursor-pointer mt-10"
-                    onClick={() => SetActive((prev) => !prev)}
-                  >
-                    Play your order
-                  </button>
-                </div>
-              </section>
+                <Payment />
+                <section>
+                  <div className="buttonplay">
+                    <button
+                      id="play"
+                      className="w-full bg-blue-700 h-14 shadow-2xl text-white rounded-sm cursor-pointer mt-10"
+                      onClick={() => SetActive((prev) => !prev)}
+                    >
+                      Play your order
+                    </button>
+                  </div>
+                </section>
+              </form>
             </div>
           </div>
         </section>
