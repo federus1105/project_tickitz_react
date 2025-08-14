@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import Modal from "../modal/Modal";
 import Payment from "../modal/Payment";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   selectSelectedSeats,
   selectTotalPrice,
 } from "../redux/slice/orderSlice";
+import { setDataFullname } from "../redux/slice/orderSlice";
+import { setDataPhone } from "../redux/slice/orderSlice";
 
 function Payment_Modal() {
   const movie = useSelector((state) => state.order.selectedMovie);
@@ -14,8 +16,14 @@ function Payment_Modal() {
   const selectedSeats = useSelector(selectSelectedSeats);
   const seatPrice = useSelector(selectTotalPrice);
   const currentUser = useSelector((state) => state.auth.currentUser);
+  const dispatch = useDispatch();
+  // const fullname = useSelector((state)=> state.order.fullname)
+  const fullname = useSelector((state) => state.order.bookingInfo.fullname);
+  const phone = useSelector((state) => state.order.bookingInfo.phone);
+  // const fullname = `${fullnameObj.first} ${fullnameObj.last}`;
 
   const [Active, SetActive] = useState(false);
+  console.log(Modal)
 
   return (
     <>
@@ -125,8 +133,12 @@ function Payment_Modal() {
                         type="text"
                         name="fullname"
                         id="fullname"
+                        value={fullname}
                         placeholder="Full Name"
                         className="w-full border-1 border-gray-400 h-13 rounded-sm pl-10 text-lg mb-5 mt-1"
+                        onChange={(e) =>
+                          dispatch(setDataFullname(e.target.value))
+                        }
                       />
                     </div>
                     <div>
@@ -138,9 +150,7 @@ function Payment_Modal() {
                         id="email"
                         name="email"
                         value={currentUser.email}
-                        // onChange={(e) => {
-                        //   setEmail(e.target.value);
-                        // }}
+                        readOnly
                         className="w-full border-1 border-gray-400 h-13 rounded-sm pl-10 text-lg mb-5 mt-1"
                       />
                     </div>
@@ -155,8 +165,10 @@ function Payment_Modal() {
                         type="text"
                         name="number"
                         id="number"
+                        value={phone}
                         placeholder="Phone Number"
                         className="w-full border-1 border-gray-400 h-13 rounded-sm pl-10 text-lg mt-1"
+                        onChange={(e) => dispatch(setDataPhone(e.target.value))}
                       />
                     </div>
                   </div>
