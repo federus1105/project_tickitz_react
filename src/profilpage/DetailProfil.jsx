@@ -1,10 +1,7 @@
 import React from "react";
 import Account from "./Account";
-import { useSelector } from "react-redux";
 
 function DetailProfil() {
-  // const users = useSelector((state) => state.auth.users);
-    const currentUser = useSelector((state) => state.auth.currentUser);
   return (
     <>
       <section>
@@ -17,49 +14,58 @@ function DetailProfil() {
               <p className="text-lg pb-2.5">Details Information</p>
               <hr />
             </div>
-            <div id="data" className="pt-5 grid grid-cols-2">
-              <div>
-                <p className="pt-4 pb-3">Firstname</p>
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  placeholder="Federus"
-                  className="h-11 w-85 border-1 rounded-lg p-7 text-lg max-lg:w-65"
-                />
+            <form>
+              <div id="data" className="pt-5 grid grid-cols-2">
+                <div>
+                  <label htmlFor="firstname" className="pt-4 pb-3">
+                    Firstname
+                  </label>
+                  <input
+                    type="text"
+                    name="firstname"
+                    id="firstname"
+                    placeholder="Firstname"
+                    className="h-11 w-85 border-1 rounded-lg p-7 text-lg max-lg:w-65"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastname" className="pt-4 pb-3">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    name="lastname"
+                    id="lastname"
+                    placeholder="Lastname"
+                    className="h-11 w-85 border-1 rounded-lg placeholder:p-7 text-lg max-lg:w-65"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="pt-4 pb-3">
+                    E-mail
+                  </label>
+                  <input
+                    type="text"
+                    name="email"
+                    id="email"
+                    placeholder="Email"
+                    className="h-11 w-85 border-1 rounded-lg p-7 text-lg max-lg:w-65 max-lg:text-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone" className="pt-4 pb-3">
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    name="phone"
+                    id="phone"
+                    placeholder="+62 | 81445687121"
+                    className="h-11 w-85 border-1 rounded-lg p-7 text-lg max-lg:w-65"
+                  />
+                </div>
               </div>
-              <div>
-                <p className="pt-4 pb-3">Last Name</p>
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  placeholder="Rudi"
-                  className="h-11 w-85 border-1 rounded-lg placeholder:p-7 text-lg max-lg:w-65"
-                />
-              </div>
-              <div>
-                <p className="pt-4 pb-3">E-mail</p>
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  value={currentUser.email}
-                  placeholder=""
-                  className="h-11 w-85 border-1 rounded-lg p-7 text-lg max-lg:w-65 max-lg:text-base"
-                />
-              </div>
-              <div>
-                <p className="pt-4 pb-3">Phone Number</p>
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  placeholder="+62 | 81445687121"
-                  className="h-11 w-85 border-1 rounded-lg p-7 text-lg max-lg:w-65"
-                />
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </section>
