@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link } from "react-router";
 
-function HamburgerMenu({ isLoggedIn, handleLogout }) {
+function HamburgerMenu({ handleLogout }) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+  const currentUser = useSelector((state) => state.auth.currentUser);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -20,7 +22,7 @@ function HamburgerMenu({ isLoggedIn, handleLogout }) {
   return (
     <div className="lg:hidden relative" ref={menuRef}>
       <img
-        src="/src/public/gg_menu-right-alt.png"
+        src="/gg_menu-right-alt.png"
         alt="hamburger"
         className="w-8 h-8 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
@@ -36,7 +38,7 @@ function HamburgerMenu({ isLoggedIn, handleLogout }) {
           <Link to="./listmovies" className="hover:text-blue-600">
             Buy Ticket
           </Link>
-          {!isLoggedIn ? (
+          {!currentUser ? (
             <>
               <Link to="/auth/login" className="hover:text-blue-600">
                 Signin
@@ -50,6 +52,16 @@ function HamburgerMenu({ isLoggedIn, handleLogout }) {
               <Link to="./profilpage" className="hover:text-blue-600">
                 Profile
               </Link>
+              <div className="flex justify-center items-center border p-2 rounded-lg">
+                <img
+                  src="/Ellipse 11.svg"
+                  alt="profile"
+                  className="w-10 h-10 cursor-pointer"
+                />
+                <span className="text-xl pl-2">
+                  {currentUser.email.split("@")[0]}
+                </span>
+              </div>
               <button
                 onClick={handleLogout}
                 className="text-left 2 text-red-600"
