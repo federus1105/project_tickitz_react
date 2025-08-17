@@ -1,20 +1,20 @@
+import React from "react";
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
 import "./index.css";
-// import App from './App.jsx'
-import Register from "./auth/Register.jsx";
-import Login from "./auth/Login.jsx";
-import List from "./movies/ListMovie.jsx";
 import Router from "./Router.jsx";
-import Payment_Modal from "./movies/Payment_Modal.jsx";
-import DetailMovie from "./movies/Detail-Movie.jsx";
-import Index from "./movies/Index.jsx";
-import ProfilePage from "./movies/ProfilePage.jsx";
-import TicketResult from "./movies/TicketResult.jsx";
-import OrderPage from "./movies/OrderPage.jsx";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { persistor, reduxStore } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
+import { Toaster } from "sonner";
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <Router />
-  </StrictMode>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  // <StrictMode>
+  <Provider store={reduxStore}>
+    <PersistGate loading={null} persistor={persistor}>
+      <Toaster richColors position="top-center" />
+      <Router />
+    </PersistGate>
+  </Provider>
+  // </StrictMode>
 );
