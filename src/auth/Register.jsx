@@ -1,9 +1,13 @@
 import { Link, useNavigate } from "react-router";
+import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { register } from "../redux/slice/authSlice";
+// import { toast } from "sonner";
 
 function Register() {
+  // untuk checkbox
+  const [agreed, setAgreed] = useState(false);
   const dispatch = useDispatch();
   const Navigate = useNavigate();
   const {
@@ -12,28 +16,27 @@ function Register() {
     password,
     setPassword,
     errorem,
-    setErrorem,
     errorpass,
-    setErrorPass,
     alertMsg,
-    setAlertMsg,
     Validate,
   } = useAuth();
 
   function submitHandler(event) {
     event.preventDefault();
+    if (!Validate()) return;
     if (email && password) {
       dispatch(register({ email, password }));
       Navigate("/auth/login");
     }
+
   }
 
   return (
     <>
-      <div className="bg-[url(public/avengers.png)] flex flex-col justify-center items-center h-full">
+      <div className="bg-[url(/avengers.png)] flex flex-col justify-center items-center h-full">
         <div className="flex justify-center">
           <img
-            src="/src/public/69ffcf42e23fbaa4462b7dee6db277d1b110ca93.png"
+            src="/69ffcf42e23fbaa4462b7dee6db277d1b110ca93.png"
             className="w-35"
           />
         </div>
@@ -79,13 +82,14 @@ function Register() {
               {alertMsg || "\u00A0"}
             </span>
             <section>
-              <label className="">Email</label>
               <div className="input">
+                <label htmlFor="email">Email</label>
                 <input
                   className="w-full border-1 p-3 rounded-sm mt-2.5 border-gray-600"
                   type="text"
                   placeholder="Enter your Email"
                   id="email"
+                  name="password"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -98,12 +102,15 @@ function Register() {
                   {errorem}
                 </span>
               </div>
-              <label className="mt-4 block">Password</label>
+              <label htmlFor="password" className="mt-4 block">
+                Password
+              </label>
               <div className="input">
                 <input
                   type="password"
                   placeholder="Enter your Password"
                   id="password"
+                  name="password"
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full h-13 border-1 p-3 rounded-sm mt-2.5 border-gray-600 "
                   value={password}
@@ -118,7 +125,14 @@ function Register() {
             </section>
 
             <section className="mb-1">
-              <input type="checkbox" id="checkbox" />
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => {
+                  setAgreed(e.target.checked);
+                  if (e.target.checked);
+                }}
+              />
               <label htmlFor="checkbox" className="pl-3">
                 I agree to term & conditions
               </label>
@@ -127,7 +141,13 @@ function Register() {
             <section>
               <button
                 type="submit"
-                className="cursor-pointer bg-blue-700 text-white rounded-sm my-4 w-full h-12"
+                disabled={!agreed}
+                className={`cursor-pointer rounded-sm my-4 w-full h-12
+                   ${
+                     agreed
+                       ? "bg-blue-700 text-white"
+                       : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                   }`}
               >
                 Join For Free Now
               </button>
@@ -151,7 +171,7 @@ function Register() {
 
           <footer className="flex justify-between mt-4">
             <button className="cursor-pointer w-35 bg-gray-100 flex gap-4 shadow-lg items-center justify-center rounded-lg ">
-              <img src="/src/public/logo.google.jpg" className="w-6" />
+              <img src="/logo.google.jpg" className="w-6" />
               <a
                 href="https://share.google/yTPcNMm1HkglEkfvp"
                 className="text-gray-700"
@@ -161,7 +181,7 @@ function Register() {
             </button>
 
             <button className="cursor-pointer w-35 h-13 bg-gray-100 flex gap-4 shadow-lg items-center justify-center rounded-lg">
-              <img src="/src/public/logo.fb.png" className="w-6" />
+              <img src="/logo.fb.png" className="w-6" />
               <a href="https://www.facebook.com/">Facebook</a>
             </button>
           </footer>
