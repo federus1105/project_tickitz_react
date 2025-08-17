@@ -5,6 +5,8 @@ const authSlice = createSlice({
   initialState: {
     users: [],
     currentUser: null,
+    isLoggedIn: false,
+    user: null,
   },
   reducers: {
     register: (state, action) => {
@@ -13,6 +15,8 @@ const authSlice = createSlice({
     },
     login: (state, action) => {
       const { email, password } = action.payload;
+      state.isLoggedIn = true;
+      state.user = action.payload;
       const user = state.users.find(
         (u) => u.email === email && u.password === password
       );
@@ -22,6 +26,8 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.currentUser = null;
+      state.isLoggedIn = false;
+      state.user = null;
     },
   },
 });
