@@ -1,61 +1,46 @@
-import React, {useState} from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { login } from "../redux/slice/authSlice";
 import useAuth from "../hooks/useAuth";
+import { toast } from "sonner";
 
 function Login() {
-    const dispatch = useDispatch();
-    const Navigate = useNavigate();
-    const users = useSelector((state) => state.auth.users)
+  const dispatch = useDispatch();
+  const Navigate = useNavigate();
+  const users = useSelector((state) => state.auth.users);
   const {
     email,
     setEmail,
     password,
     setPassword,
     errorem,
-    setErrorem,
     errorpass,
-    setErrorPass,
-    alertMsg,
-    setAlertMsg,
     Validate,
   } = useAuth();
 
   function submitHandler(event) {
     event.preventDefault();
-    dispatch(login({email, password}))
-    // if(!Validate()) return
+    dispatch(login({ email, password }));
+    if (!Validate()) return;
     const isValid = users.find(
       (u) => u.email === email && u.password === password
-    )
+    );
     if (isValid) {
-      Navigate("/movies/profilpage");
+      toast.success("Login Berhasil");
+      Navigate("/movies/");
     } else {
-      setAlertMsg("Email atau password salah!");
+      toast.error("Email atau Password salah!");
     }
-
-    // const storedUser = JSON.parse(localStorage.getItem("user"));
-    // if (!storedUser) {
-    //   setAlertMsg("Belum ada akun. Silakan register.");
-    //   return;
-    // }
-    // if (email === storedUser.email && password === storedUser.password) {
-    //   setAlertMsg("Login berhasil!");
-    //   setTimeout(() => {
-    //     window.location.href = "/movies/profilpage";
-    //   }, 1000);
-    // } else {
-    //   setAlertMsg("Email atau password salah!");
-    // }
   }
 
   return (
     <>
-      <div className="bg-[url(public/avengers.png)] flex flex-col justify-center items-center h-full">
+      <div className="bg-[url(/avengers.png)] flex flex-col justify-center items-center h-full">
         <div className="flex justify-center">
           <img
-            src="/src/public/69ffcf42e23fbaa4462b7dee6db277d1b110ca93.png"
+            // src="/69ffcf42e23fbaa4462b7dee6db277d1b110ca93.png"
+            src="/69ffcf42e23fbaa4462b7dee6db277d1b110ca93.png"
             className="w-35"
           />
         </div>
@@ -69,26 +54,17 @@ function Login() {
           </header>
 
           <form onSubmit={submitHandler}>
-            <span
-              className={`block min-h-[1.5rem] px-2 py-1 rounded ${
-                alertMsg === "Login berhasil!"
-                  ? "bg-green-100 text-green-700"
-                  : alertMsg
-                  ? "bg-red-100 text-red-700"
-                  : ""
-              }`}
-            >
-              {alertMsg || "\u00A0"}
-            </span>
-
             <section>
-              <label className="">Email</label>
+              <label htmlFor="email" className="">
+                Email
+              </label>
               <div className="input">
                 <input
                   className="w-full border-1 p-3 rounded-sm mt-2.5 border-gray-600"
                   type="text"
                   placeholder="Enter your Email"
                   id="email"
+                  name="email"
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
@@ -101,12 +77,15 @@ function Login() {
                   {errorem}
                 </span>
               </div>
-              <label className="mt-4 block">Password</label>
+              <label htmlFor="password" className="mt-4 block">
+                Password
+              </label>
               <div className="input">
                 <input
                   type="password"
                   placeholder="Enter your Password"
                   id="password"
+                  name="password"
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full h-13 border-1 p-3 rounded-sm mt-2.5 border-gray-600 "
                   value={password}
@@ -121,9 +100,12 @@ function Login() {
             </section>
 
             <section>
-              <a href="#" className="flex justify-end text-blue-700 mt-1">
+              <Link
+                to={"../forget"}
+                className="flex justify-end text-blue-700 mt-1"
+              >
                 Forgot your Password?
-              </a>
+              </Link>
             </section>
             <section>
               <Link to={`../`} className="flex justify-end text-blue-700">
@@ -150,7 +132,7 @@ function Login() {
 
           <footer className="flex justify-between mt-4">
             <button className="cursor-pointer w-35 bg-gray-100 flex gap-4 shadow-lg items-center justify-center rounded-lg ">
-              <img src="/src/public/logo.google.jpg" className="w-6" />
+              <img src="/logo.google.jpg" className="w-6" />
               <a
                 href="https://share.google/yTPcNMm1HkglEkfvp"
                 className="text-gray-700"
@@ -160,7 +142,7 @@ function Login() {
             </button>
 
             <button className="cursor-pointer w-35 h-13 bg-gray-100 flex gap-4 shadow-lg items-center justify-center rounded-lg">
-              <img src="/src/public/logo.fb.png" className="w-6" />
+              <img src="/logo.fb.png" className="w-6" />
               <a href="https://www.facebook.com/">Facebook</a>
             </button>
           </footer>
