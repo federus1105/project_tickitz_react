@@ -2,18 +2,21 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Books from "../detailmovies/Books";
 import Cinemas from "../detailmovies/Cinemas";
-
-const API_KEY = "44069dd5e3a0de5d4d7ff0643cb336a0";
+import { useDispatch } from "react-redux";
+import { setSelectedMovie } from "../redux/slice/orderSlice";
 
 function DetailMovie() {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchMovie() {
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&append_to_response=credits`
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${
+            import.meta.env.VITE_API_KEY
+          }&append_to_response=credits`
         );
         const data = await res.json();
         setMovie(data);
@@ -46,6 +49,18 @@ function DetailMovie() {
     .map((actor) => actor.name)
     .join(", ");
   const duration = `${Math.floor(runtime / 60)} hours ${runtime % 60} minutes`;
+
+  const handdleBook = () => {
+    dispatch(
+      setSelectedMovie({
+        id,
+        title,
+        poster_path,
+        genres,
+      })
+    );
+  };
+
   return (
     <>
       <div>
@@ -68,7 +83,9 @@ function DetailMovie() {
                   />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-semibold mb-2 pl-67">{title}</h2>
+                  <h2 className="text-3xl font-semibold mb-2 pl-67 max-lg:text-2xl">
+                    {title}
+                  </h2>
                   <div className="flex gap-2 mb-4 pl-67 max-lg:flex-wrap">
                     {genres.map((genre) => (
                       <span
@@ -127,7 +144,7 @@ function DetailMovie() {
             </button>
           </div> */}
           <div className="flex justify-center my-13 ">
-            <button>
+            <button onClick={handdleBook}>
               <Link
                 to="../orderpage"
                 className="bg-blue-700 text-white py-3 px-10 rounded-sm"
