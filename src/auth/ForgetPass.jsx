@@ -5,7 +5,7 @@ import { login } from "../redux/slice/authSlice";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
 
-function Login() {
+function Forget() {
   const dispatch = useDispatch();
   const Navigate = useNavigate();
   const users = useSelector((state) => state.auth.users);
@@ -92,7 +92,7 @@ function Login() {
               <div className="input">
                 <input
                   type="currentpass"
-                  placeholder="Enter your Password"
+                  placeholder="Enter your Current Password"
                   id="currentpass"
                   name="currentpass"
                   className="w-full h-13 border-1 p-3 rounded-sm mt-2.5 border-gray-600 "
@@ -111,31 +111,14 @@ function Login() {
                 type="submit"
                 className="cursor-pointer bg-blue-700 text-white rounded-sm my-4 w-full h-12"
               >
-                Forget
+                Reset Password
               </button>
             </section>
           </form>
-
-          {/* <footer className="flex justify-between mt-4">
-            <button className="cursor-pointer w-35 bg-gray-100 flex gap-4 shadow-lg items-center justify-center rounded-lg ">
-              <img src="/logo.google.jpg" className="w-6" />
-              <a
-                href="https://share.google/yTPcNMm1HkglEkfvp"
-                className="text-gray-700"
-              >
-                Google
-              </a>
-            </button>
-
-            <button className="cursor-pointer w-35 h-13 bg-gray-100 flex gap-4 shadow-lg items-center justify-center rounded-lg">
-              <img src="/logo.fb.png" className="w-6" />
-              <a href="https://www.facebook.com/">Facebook</a>
-            </button>
-          </footer> */}
         </main>
       </div>
     </>
   );
 }
 
-export default Login;
+export default Forget;
