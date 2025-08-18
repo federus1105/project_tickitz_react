@@ -1,15 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { selectTotalPrice } from "../redux/slice/orderSlice";
+import { toast } from "sonner";
 
 function Modal() {
+  toast.success("Pembayaran Berhasil");
   const bookingInfo = useSelector((state) => state.order.bookingInfo);
+  const seatPrice = useSelector(selectTotalPrice);
   return (
     <>
-      <section>
+      <section className="">
         <div
           id="payment-info"
-          className="z-10 absolute shadow-2xl bg-white w-180 h-115 rounded-lg mx-9 max-lg:w-138 max-lg:mx-0"
+          className="absolute shadow-2xl bg-white w-180 h-115 rounded-lg mx-9 max-lg:w-138 max-lg:mx-0"
         >
           <div id="fill-payment" className="py-5 px-10">
             <h3 className="text-center text-2xl mb-10 font-bold">
@@ -26,14 +30,13 @@ function Modal() {
                   Copy
                 </span>
                 <p className="text-blue-700 flex justify-end pt-10 text-xl font-bold">
-                  $30
+                  ${seatPrice}
                 </p>
               </div>
             </div>
             <div id="descpay" className="pt-8">
               <p className="text-gray-500 text-lg">
-                Pay this payment bill before it is due,
-                {" "}
+                Pay this payment bill before it is due,{" "}
                 <span className="text-red-600">
                   on{" "}
                   {new Date(bookingInfo.date).toLocaleDateString("en-GB", {
