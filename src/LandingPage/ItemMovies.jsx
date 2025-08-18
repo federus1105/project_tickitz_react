@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-const API_KEY = "44069dd5e3a0de5d4d7ff0643cb336a0";
 import { Link } from "react-router-dom";
+import { forwardRef } from "react";
 
 function reverseids(ids, genre) {
   return ids.map((id) => {
@@ -9,7 +9,8 @@ function reverseids(ids, genre) {
   });
 }
 
-function ItemMovies() {
+// forwardRef memungkinkan parent mengakses ref dari komponen child.
+const ItemMovies = forwardRef((pros, ref) => {
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
 
@@ -18,14 +19,18 @@ function ItemMovies() {
       try {
         // Ambil genre
         const genreRes = await fetch(
-          `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=${
+            import.meta.env.VITE_API_KEY
+          }`
         );
         const genreData = await genreRes.json();
         setGenres(genreData.genres);
 
         // Ambil movie populer
         const movieRes = await fetch(
-          `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`
+          `https://api.themoviedb.org/3/movie/popular?api_key=${
+            import.meta.env.VITE_API_KEY
+          }`
         );
         const movieData = await movieRes.json();
         const results = movieData.results;
@@ -49,10 +54,10 @@ function ItemMovies() {
   }, []);
   return (
     <section
-      id="three_image"
+    ref={ref}
       className="flex gap-3 justify-center overflow-x-scroll"
     >
-      {movies.slice(0, 6).map((film) => (
+      {movies.map((film) => (
         <article
           className="min-w-[270px] flex-shrink-1 rounded-lg shadow-xl p-4 bg-white"
           key={film.id}
@@ -81,6 +86,6 @@ function ItemMovies() {
       ))}
     </section>
   );
-}
+});
 
 export default ItemMovies;
