@@ -3,6 +3,7 @@ import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { register } from "../redux/slice/authSlice";
+import { toast } from "sonner";
 // import { toast } from "sonner";
 
 function Register() {
@@ -26,9 +27,9 @@ function Register() {
     if (!Validate()) return;
     if (email && password) {
       dispatch(register({ email, password }));
+      toast.success("Akun Berhasil Dibuat");
       Navigate("/auth/login");
     }
-
   }
 
   return (
