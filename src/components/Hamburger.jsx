@@ -28,31 +28,10 @@ function HamburgerMenu({ handleLogout }) {
         onClick={() => setIsOpen(!isOpen)}
       />
       {isOpen && (
-        <div className="absolute -right-27 mt-7 w-195 bg-white shadow-lg rounded p-2 flex flex-col items-center gap-3 z-50">
-          <Link to="./" className="hover:text-blue-600">
-            Home
-          </Link>
-          <Link to="./listmovies" className="hover:text-blue-600">
-            Movie
-          </Link>
-          <Link to="./listmovies" className="hover:text-blue-600">
-            Buy Ticket
-          </Link>
-          {!currentUser ? (
+        <div className="absolute -right-27 mt-7 w-195 bg-white shadow-lg rounded p-3 flex flex-col items-start gap-3 z-50 px-28 border-b-1">
+          {currentUser && (
             <>
-              <Link to="/auth/login" className="hover:text-blue-600">
-                Signin
-              </Link>
-              <Link to="/auth/" className="hover:text-blue-600">
-                SignUp
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to="./profilpage" className="hover:text-blue-600">
-                Profile
-              </Link>
-              <div className="flex justify-center items-center border p-2 rounded-lg">
+              <div className="flex items-center justify-center border p-2 rounded-lg w-full">
                 <img
                   src="/Ellipse 11.svg"
                   alt="profile"
@@ -62,10 +41,55 @@ function HamburgerMenu({ handleLogout }) {
                   {currentUser.email.split("@")[0]}
                 </span>
               </div>
-              <button
-                onClick={handleLogout}
-                className="text-left 2 text-red-600"
+            </>
+          )}
+
+          <Link to="./" className="hover:text-blue-600 hover:bg-gray-200">
+            Home
+          </Link>
+          <hr className="w-full border-t border-gray-300 " />
+          <Link
+            to="./listmovies"
+            className="hover:text-blue-600 hover:bg-gray-200"
+          >
+            Movie
+          </Link>
+          <hr className="w-full border-t border-gray-300 " />
+          <Link
+            to="./listmovies"
+            className="hover:text-blue-600 hover:bg-gray-200"
+          >
+            Buy Ticket
+          </Link>
+          <hr className="w-full border-t border-gray-300 " />
+
+          {!currentUser ? (
+            <>
+              <Link
+                to="/auth/login"
+                className="hover:text-blue-600 hover:bg-gray-200"
               >
+                Signin
+              </Link>
+              <hr className="w-full border-t border-gray-300 " />
+              <Link
+                to="/auth/"
+                className="hover:text-blue-600 hover:bg-gray-200"
+              >
+                SignUp
+              </Link>
+              <hr className="w-full border-t border-gray-300 " />
+            </>
+          ) : (
+            <>
+              <Link
+                to="./profilpage"
+                className="hover:text-blue-600 hover:bg-gray-200"
+              >
+                Profile
+              </Link>
+              <hr className="w-full border-t border-gray-300 " />
+              <button onClick={handleLogout} className="pb-5 text-red-600">
                 Logout
               </button>
             </>
