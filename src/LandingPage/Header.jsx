@@ -8,10 +8,10 @@ function Header() {
         className="flex justify-between mt-13 max-lg:flex max-lg:flex-wrap max-lg:justify-center"
       >
         <div className="flex justify-center flex-col max-lg:flex max-lg:items-center ">
-          <h4 className="mb-3 text-blue-600 font-bold">
+          <h4 className="mb-3 text-blue-600 font-bold max-lg:text-sm">
             MOVIE TICKET PURCHASES #1 IN INDONESIA
           </h4>
-          <h1 className="text-5xl max-lg:text-center">
+          <h1 className="text-5xl max-lg:text-center max-lg:text-3xl">
             Experience the Magic of
             <br />
             Cinema: Book Your Tickets
@@ -25,16 +25,16 @@ function Header() {
 
         <div className="grid-area-image grid gap-2">
           <div className="area-img1">
-            <img src="/src/public/Rectangle 35.png" />
+            <img src="/Rectangle 35.png" />
           </div>
           <div className="area-img2">
-            <img src="/src/public/Rectangle 36.png" />
+            <img src="/Rectangle 36.png" />
           </div>
           <div className="area-img3">
-            <img src="/src/public/Rectangle 37.png" />
+            <img src="/Rectangle 37.png" />
           </div>
           <div className="area-img4">
-            <img src="/src/public/Rectangle 38.png" />
+            <img src="/Rectangle 38.png" />
           </div>
         </div>
       </section>
