@@ -1,17 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createSelector } from "@reduxjs/toolkit";
 
-// untuk data Kursi
-export const selectSelectedSeats = createSelector(
-  (state) => state.order.bookingInfo.selectedSeat,
-  (selectedSeat) => selectedSeat
-);
 
-// untuk data Total kursi
-export const selectTotalPrice = createSelector(
-  (state) => state.order.bookingInfo,
-  (bookingInfo) => bookingInfo.selectedSeat.length * bookingInfo.pricePerSeat
-);
+// untuk ambil data Kursi dari kursi
+export const selectSelectedSeats = (state) =>
+  state.order.bookingInfo.selectedSeat;
+
+
+// untuk hitung total harga
+export const selectTotalPrice = (state) =>
+  state.order.bookingInfo.selectedSeat.length *
+  state.order.bookingInfo.pricePerSeat;
+
 
 const initialState = {
   selectedMovie: null,
@@ -21,9 +20,9 @@ const initialState = {
     location: "",
     selectedSeat: [],
     pricePerSeat: 10,
-    payment: null,
     fullname: "",
     phone: "",
+    payment: null,
   },
 };
 
@@ -33,6 +32,12 @@ const orderSlice = createSlice({
   reducers: {
     setCinema: (state, action) => {
       state.cinema = action.payload;
+    },
+    setDataFullname: (state, action) => {
+      state.bookingInfo.fullname = action.payload;
+    },
+    setDataPhone: (state, action) => {
+      state.bookingInfo.phone = action.payload;
     },
     setSelectedMovie: (state, action) => {
       state.selectedMovie = action.payload;
@@ -60,6 +65,8 @@ const orderSlice = createSlice({
 
 export const {
   setCinema,
+  setDataFullname,
+  setDataPhone,
   setSelectedMovie,
   setBookingInfo,
   toggleSeat,
