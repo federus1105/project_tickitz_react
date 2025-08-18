@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import HamburgerMenu from "./Hamburger";
 import { logout } from "../redux/slice/authSlice";
+import { toast } from "sonner";
 
 function Navbar() {
   const [isLoggedIn, SetIsLoggedIn] = useState(false);
@@ -12,17 +13,19 @@ function Navbar() {
   const Navigate = useNavigate();
 
   const handleLogout = () => {
+    toast.success("Anda berhasil Logout");
     dispatch(logout());
     Navigate("../movies/");
   };
 
+  //Untuk Menampilkan Logout
   const toggleDropdown = () => {
     setShowDropdown((prev) => !prev);
   };
 
   return (
-    <nav className="sticky top-0 z-10 h-25 px-26 backdrop-filter backdrop-blur-xl flex items-center justify-between">
-      <img src="/src/public/Tickitz 1.png" className="" alt="logo" />
+    <nav className="sticky top-0 z-10 h-25 px-26 bg-white border-b border-b-gray-300 flex items-center justify-between max-md:px-5">
+      <img src="/Tickitz 1.png" className="" alt="logo" />
       {/* Menu untuk layar besar */}
       <div className="hidden lg:flex gap-10">
         <Link to="./">Home</Link>
@@ -45,7 +48,7 @@ function Navbar() {
             <p className="pr-1">Halo! {currentUser.email.split("@")[0]} 😄</p>
             <div className="relative">
               <img
-                src="/src/public/Ellipse 11.svg"
+                src="/Ellipse 11.svg"
                 alt="profile"
                 className="w-10 h-10 cursor-pointer"
                 onClick={toggleDropdown}
