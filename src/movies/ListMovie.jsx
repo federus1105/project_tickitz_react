@@ -1,43 +1,77 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Subscribe from "../components/Subscribe";
-const API_KEY = "44069dd5e3a0de5d4d7ff0643cb336a0";
 import ItemMovies from "../components/ItemMovies";
 
-function Reverseids(ids, genre) {
-  return ids.map((id) => {
-    const genreObj = genre.find((el) => id === el.id);
-    return genreObj ? genreObj.name : "";
-  });
-}
-
 function PopularMovies() {
-  const [Movies, SetMovies] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
+
+  // Ambil params dari URL
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchTerm = searchParams.get("search") || "";
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const selectedGenres = searchParams.get("genre")
+    ? searchParams.get("genre").split(",").filter(Boolean)
+    : [];
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchGenres() {
       try {
-        const genreRes = await fetch(
-          `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`
+        // Ambil data genre
+        const res = await fetch(
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=${
+            import.meta.env.VITE_API_KEY
+          }`
         );
-        const genreData = await genreRes.json();
-        setGenres(genreData.genres);
+        const data = await res.json();
+        setGenres(data.genres);
       } catch (error) {
-        console.log("Error fetching popular movies:", error);
+        console.log("Error fetching genres:", error);
       }
     }
-    fetchData();
+    fetchGenres();
   }, []);
+
+  // Update search
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchParams({
+      search: value,
+      page: "1",
+      genre: selectedGenres.join(","),
+    });
+  };
+
+  // Update page
+  const handlePageChange = (pg) => {
+    setSearchParams({
+      search: searchTerm,
+      page: String(pg),
+      genre: selectedGenres.join(","),
+    });
+  };
+
+  // Update genre
+  const handleGenreClick = (genreId) => {
+    let updatedGenres;
+    if (selectedGenres.includes(String(genreId))) {
+      updatedGenres = selectedGenres.filter((id) => id !== String(genreId));
+    } else {
+      updatedGenres = [...selectedGenres, String(genreId)];
+    }
+    setSearchParams({
+      search: searchTerm,
+      page: "1",
+      genre: updatedGenres.join(","),
+    });
+  };
 
   return (
     <>
       <header>
         <div>
-          <img src="/src/public/image 1.png" alt="" className="brightness-50" />
-          <p className="text-[15px]  text-white absolute top-53 pl-30 max-lg:text-xs max-lg:top-36">
+          <img src="/image 1.png" alt="" className="brightness-50" />
+          <p className="text-[15px] text-white absolute top-53 pl-30 max-lg:text-xs max-lg:top-36">
             LIST MOVIE OF THE WEEK
           </p>
           <h1 className="text-[50px] text-white absolute left-29 top-61 max-lg:text-[30px] max-lg:top-40">
@@ -47,14 +81,11 @@ function PopularMovies() {
             <br />
             Today
           </h1>
-          <div id="oval" className="">
-            <div className="absolute w-[7px] h-[7px] bg-white top-133 left-175 rounded-full max-lg:top-86 max-lg:left-105"></div>
-            <div className="absolute w-[7px] h-[7px] bg-white top-133 left-170 rounded-full max-lg:top-86 max-lg:left-100"></div>
-            <div className="absolute w-[50px] h-[7px] bg-blue-700 top-133 left-155 rounded-full max-lg:top-86 max-lg:left-83"></div>
-          </div>
         </div>
       </header>
+
       <main className="ml-28 mr-28">
+        {/* Search & Filter */}
         <section>
           <p className="pt-10">Cari Event</p>
           <div
@@ -62,49 +93,43 @@ function PopularMovies() {
             className="flex pt-2 pb-10 gap-3.5 max-lg:pb-5 max-lg:flex max-lg:flex-col"
           >
             <div>
-              <img
-                src="/src/public/Search.png"
-                alt=""
-                className="absolute pt-3.5 pl-4"
-              />
+              <img src="/Search.png" alt="" className="absolute pt-3.5 pl-4 max-lg:pt-3" />
               <input
                 type="text"
-                placeholder="New Born Expert"
-                className="border-1 border-gray-400 rounded-md py-3 pl-15 "
+                placeholder="Search Movies"
+                className="border-1 border-gray-400 rounded-md py-3 pl-15 max-lg:py-2 max-lg:w-full "
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleSearchChange}
               />
             </div>
             <div id="filter" className="pt-1.5">
-              <div>
-                {genres.slice(0, 6).map((genre) => (
-                  <button
-                    key={genre.id}
-                    onClick={() =>
-                      setSelectedGenre((prev) =>
-                        prev === genre.id ? null : genre.id
-                      )
-                    }
-                    className={`cursor-pointer ml-7 pt-2 hover:border-b-3 max-lg:mx-3 ${
-                      selectedGenre === genre.id
-                        ? "border-b-4 border-blue-600"
-                        : ""
-                    }`}
-                  >
-                    {genre.name}
-                  </button>
-                ))}
-              </div>
+              {genres.slice(0, 6).map((genre) => (
+                <button
+                  key={genre.id}
+                  onClick={() => handleGenreClick(genre.id)}
+                  className={`cursor-pointer ml-7 pt-2 hover:border-b-2 max-lg:mx-3 ${
+                    selectedGenres.includes(String(genre.id))
+                      ? "border-b-2 border-blue-600"
+                      : ""
+                  }`}
+                >
+                  {genre.name}
+                </button>
+              ))}
             </div>
           </div>
         </section>
+
+        {/* Movie List */}
         <section>
           <ItemMovies
-            selectedGenre={selectedGenre}
+            selectedGenres={selectedGenres}
             searchTerm={searchTerm}
             page={page}
           />
         </section>
+
+        {/* Pagination */}
         <section>
           <div id="button_options" className="flex justify-center gap-5">
             {[1, 2, 3, 4].map((pg) => (
@@ -115,7 +140,7 @@ function PopularMovies() {
                     ? "bg-blue-600 text-white"
                     : "bg-gray-300 text-black"
                 }`}
-                onClick={() => setPage(pg)}
+                onClick={() => handlePageChange(pg)}
               >
                 {pg}
               </button>
