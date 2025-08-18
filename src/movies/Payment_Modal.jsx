@@ -3,31 +3,29 @@ import Modal from "../modal/Modal";
 import Payment from "../modal/Payment";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  selectSelectedSeats,
+  setDataFullname,
+  setDataPhone,
   selectTotalPrice,
 } from "../redux/slice/orderSlice";
-import { setDataFullname } from "../redux/slice/orderSlice";
-import { setDataPhone } from "../redux/slice/orderSlice";
+
 
 function Payment_Modal() {
   const movie = useSelector((state) => state.order.selectedMovie);
-  const bookingInfo = useSelector((state) => state.order.bookingInfo);
   const cinema = useSelector((state) => state.order.cinema);
-  const selectedSeats = useSelector(selectSelectedSeats);
   const seatPrice = useSelector(selectTotalPrice);
   const currentUser = useSelector((state) => state.auth.currentUser);
+  const { date, time, selectedSeat, fullname, phone } = useSelector(
+    (state) => state.order.bookingInfo
+  );
   const dispatch = useDispatch();
-  // const fullname = useSelector((state)=> state.order.fullname)
-  const fullname = useSelector((state) => state.order.bookingInfo.fullname);
-  const phone = useSelector((state) => state.order.bookingInfo.phone);
-  // const fullname = `${fullnameObj.first} ${fullnameObj.last}`;
+
 
   const [Active, SetActive] = useState(false);
-  console.log(Modal)
 
   return (
     <>
-      <main className=" bg-gray-200">
+      <main className="relative bg-gray-200">
+        {Active && <div className="absolute inset-0 backdrop-brightness-50" />}
         <div
           id="container"
           className="max-w-lg w-full mx-auto rounded-xl p-5 flex flex-col "
@@ -40,7 +38,7 @@ function Payment_Modal() {
             {/* Step 1 */}
             <div className="text-center flex flex-col items-center">
               <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center mb-1">
-                <img src="/src/public/Vector.png" alt="Step 1 icon" />
+                <img src="/Vector.png" alt="Step 1 icon" />
               </div>
               <div className="text-xs text-gray-800">Dates And Time</div>
             </div>
@@ -51,7 +49,7 @@ function Payment_Modal() {
             {/* Step 2 */}
             <div className="text-center">
               <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center mb-1">
-                <img src="/src/public/Vector.png" alt="Step 2 icon" />
+                <img src="/Vector.png" alt="Step 2 icon" />
               </div>
               <div className="text-xs text-gray-800">Seat</div>
             </div>
@@ -82,13 +80,13 @@ function Payment_Modal() {
                 <div>
                   <h4 className="text-gray-400 pb-2.5">DATE & TIME</h4>
                   <p className="pb-2">
-                    {new Date(bookingInfo.date).toLocaleDateString("en-GB", {
+                    {new Date(date).toLocaleDateString("en-GB", {
                       weekday: "long",
                       year: "numeric",
                       month: "long",
                       day: "numeric",
                     })}{" "}
-                    at {bookingInfo.time}
+                    at {time}
                   </p>
                   <hr />
                 </div>
@@ -105,7 +103,7 @@ function Payment_Modal() {
                 </div>
                 <div>
                   <h4 className="text-gray-400 pb-2.5">NUMBER OF TICKETS</h4>
-                  <p className="pb-2">{selectedSeats.length} Pcs</p>
+                  <p className="pb-2">{selectedSeat.length} Pcs</p>
                   <hr />
                 </div>
                 <div>
@@ -174,18 +172,18 @@ function Payment_Modal() {
                   </div>
                 </div>
                 <Payment />
-                <section>
-                  <div className="buttonplay">
-                    <button
-                      id="play"
-                      className="w-full bg-blue-700 h-14 shadow-2xl text-white rounded-sm cursor-pointer mt-10"
-                      onClick={() => SetActive((prev) => !prev)}
-                    >
-                      Play your order
-                    </button>
-                  </div>
-                </section>
               </form>
+              <section>
+                <div className="buttonplay">
+                  <button
+                    id="play"
+                    className="w-full bg-blue-700 h-14 shadow-2xl text-white rounded-sm cursor-pointer mt-10"
+                    onClick={() => SetActive((prev) => !prev)}
+                  >
+                    Play your order
+                  </button>
+                </div>
+              </section>
             </div>
           </div>
         </section>
