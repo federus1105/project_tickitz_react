@@ -29,8 +29,15 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
     },
+    resetPassword: (state, action) => {
+      const { email, newPassword } = action.payload;
+      const user = state.users.find((u) => u.email === email);
+      if (user) {
+        user.password = newPassword;
+      }
+    },
   },
 });
 
-export const { register, login, logout } = authSlice.actions;
+export const { register, login, logout, resetPassword } = authSlice.actions;
 export default authSlice.reducer;
