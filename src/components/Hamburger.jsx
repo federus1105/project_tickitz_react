@@ -33,12 +33,12 @@ function HamburgerMenu({ handleLogout }) {
             <>
               <div className="flex items-center justify-center border p-2 rounded-lg w-full">
                 <img
-                  src="/Ellipse 11.svg"
+                  src={`${import.meta.env.VITE_BE_HOST}/img/${currentUser?.data?.[0]?.image}`}
                   alt="profile"
                   className="w-10 h-10 cursor-pointer"
                 />
                 <span className="text-xl pl-2">
-                  {currentUser.email.split("@")[0]}
+                  {currentUser?.data?.[0]?.first_name}
                 </span>
               </div>
             </>
