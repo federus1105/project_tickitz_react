@@ -25,6 +25,7 @@ FROM nginx:stable-bookworm
 # copy premade config
 COPY --from=builder /app/nginx/nginx.conf /etc/nginx/
 COPY --from=builder /app/nginx/sites-available/app.conf /etc/nginx/sites-available/
+COPY --from=builder /app/nginx/includes/proxy.conf  /app/nginx/includes/proxy.conf
 
 # create symboliklink
 RUN mkdir -p /etc/nginx/sites-enabled
