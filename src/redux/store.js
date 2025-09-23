@@ -8,6 +8,7 @@ import orderReducer from "./slice/orderSlice";
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["auth"],
 };
 
 const rootReducer = combineReducers({
@@ -22,3 +23,4 @@ export const reduxStore = configureStore({
 });
 
 export const persistor = persistStore(reduxStore);
+

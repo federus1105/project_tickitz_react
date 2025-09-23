@@ -1,43 +1,49 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { editProfile } from "../thunk/updateProfileThunk";
+
+// const storedUser = localStorage.getItem("currentUser");
+// const storedToken = localStorage.getItem("token");
+
+const initialState = {
+isLoggedIn: false,
+  currentUser: null,
+  token: null,
+  isLoading: false,
+};
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    users: [],
-    currentUser: null,
-    isLoggedIn: false,
-    user: null,
-  },
+  initialState,
   reducers: {
-    register: (state, action) => {
-      const { email, password } = action.payload;
-      state.users.push({ email, password });
-    },
-    login: (state, action) => {
-      const { email, password } = action.payload;
+      login: (state, action) => {
+      state.currentUser = action.payload.user;
+      state.token = action.payload.token;
       state.isLoggedIn = true;
-      state.user = action.payload;
-      const user = state.users.find(
-        (u) => u.email === email && u.password === password
-      );
-      if (user) {
-        state.currentUser = user;
-      }
     },
-    logout: (state) => {
+     logout: (state) => {
       state.currentUser = null;
+      state.token = null;
       state.isLoggedIn = false;
-      state.user = null;
     },
-    resetPassword: (state, action) => {
-      const { email, newPassword } = action.payload;
-      const user = state.users.find((u) => u.email === email);
-      if (user) {
-        user.password = newPassword;
-      }
+    editProfilee: (state, action) => {
+      state.currentUser = action.payload
     },
+extraReducers: (builder) => {
+  builder
+    .addCase(editProfile.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(editProfile.fulfilled, (state, action) => {
+      state.isLoading = false;
+  state.currentUser = action.payload;
+    })
+    .addCase(editProfile.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload || "Gagal update profile";
+    });
+},
   },
 });
 
-export const { register, login, logout, resetPassword } = authSlice.actions;
+export const { register, login, logout, resetPassword, editProfilee} = authSlice.actions;
 export default authSlice.reducer;

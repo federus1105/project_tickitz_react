@@ -2,29 +2,37 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Books from "../detailmovies/Books";
 import Cinemas from "../detailmovies/Cinemas";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSelectedMovie } from "../redux/slice/orderSlice";
 
 function DetailMovie() {
+  const token = useSelector((state) => state.auth.token);
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchMovie() {
+      if (!id) return;
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}?api_key=${
-            import.meta.env.VITE_API_KEY
-          }&append_to_response=credits`
+          `${import.meta.env.VITE_BE_HOST}/movies/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
         const data = await res.json();
-        setMovie(data);
+        // console.log("Movie data:", data);
+        setMovie(data.data[0]);
       } catch (error) {
         console.error("Failed to fetch movie detail:", error);
       }
     }
-
     fetchMovie();
   }, [id]);
 
@@ -33,29 +41,27 @@ function DetailMovie() {
 
   // Data yang di perlukan
   const {
-    backdrop_path,
-    poster_path,
+    image,
+    backdrop,
     title,
     release_date,
-    runtime,
-    overview,
+    duration,
+    director,
     genres,
-    credits,
+    actor,
+    synopsis,
   } = movie;
 
-  const director = credits.crew.find((person) => person.job === "Director");
-  const cast = credits.cast
-    .slice(0, 4)
-    .map((actor) => actor.name)
-    .join(", ");
-  const duration = `${Math.floor(runtime / 60)} hours ${runtime % 60} minutes`;
+  const durationText = duration
+    ? `${Math.floor(duration / 60)} hours ${duration % 60} minutes`
+    : "N/A";
 
   const handdleBook = () => {
     dispatch(
       setSelectedMovie({
         id,
         title,
-        poster_path,
+        image,
         genres,
       })
     );
@@ -64,11 +70,9 @@ function DetailMovie() {
   return (
     <>
       <div>
-        <img
-          src={`https://image.tmdb.org/t/p/original${backdrop_path}`}
-          alt={title}
-          className="w-full h-100 object-cover"
-        />
+        <img src={backdrop} 
+        alt={title} 
+        className="w-full h-100 object-cover" />
       </div>
       <main className="ml-28 mr-28">
         <section>
@@ -77,7 +81,7 @@ function DetailMovie() {
               <section className="flex gap-12 mt-3">
                 <div className="absolute top-78 left-28 max-lg:top-92">
                   <img
-                    src={`https://image.tmdb.org/t/p/w500${poster_path}`}
+                    src={`http://localhost:8080/img/${image}`}
                     alt={title}
                     className="rounded-md w-[250px]"
                   />
@@ -87,12 +91,20 @@ function DetailMovie() {
                     {title}
                   </h2>
                   <div className="flex gap-2 mb-4 pl-67 max-lg:flex-wrap">
-                    {genres.map((genre) => (
+                    {/* {genres.map((genre) => (
                       <span
                         key={genre.id}
                         className="bg-gray-200 px-3 py-1 rounded-full text-sm text-gray-400"
                       >
                         {genre.name}
+                      </span>
+                    ))} */}
+                    {genres.map((genre, index) => (
+                      <span
+                        key={index}
+                        className="bg-gray-200 px-3 py-1 rounded-full text-sm text-gray-400"
+                      >
+                        {genre}
                       </span>
                     ))}
                   </div>
@@ -103,22 +115,22 @@ function DetailMovie() {
                     </div>
                     <div>
                       <p className="text-gray-400">Directed by</p>
-                      <p>{director?.name || "Unknown"}</p>
+                      <p>{director || "Unknown"}</p>
                     </div>
                     <div>
                       <p className="text-gray-400">Duration</p>
-                      <p>{duration}</p>
+                      <p>{durationText}</p>
                     </div>
                     <div>
                       <p className="text-gray-400">Casts</p>
-                      <p>{cast}</p>
+                      <p>{actor.join(", ")}</p>
                     </div>
                   </div>
                   <div>
                     <h3 className="font-semibold mb-2 mt-10 max-lg:mt-0">
                       Synopsis
                     </h3>
-                    <p className="text-gray-500 text-justify">{overview}</p>
+                    <p className="text-gray-500 text-justify">{synopsis}</p>
                   </div>
                 </div>
               </section>

@@ -1,24 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector} from "react-redux";
-import {
-  selectSelectedSeats,
-  selectTotalPrice,
-} from "../redux/slice/orderSlice";
+import { useSelector } from "react-redux";
+import { selectTotalPrice } from "../redux/slice/orderSlice";
 
 function CardLeft() {
   const movie = useSelector((state) => state.order.selectedMovie);
-  const bookingInfo = useSelector((state) => state.order.bookingInfo);
   const cinema = useSelector((state) => state.order.cinema);
-  const selectedSeats = useSelector(selectSelectedSeats);
-    const seatPrice = useSelector(selectTotalPrice);
+  const seatPrice = useSelector(selectTotalPrice);
+  const { date, time, selectedSeat } = useSelector(
+    (state) => state.order.bookingInfo
+  );
   return (
     <>
       <section className="bg-white h-full w-110 rounded-md">
         <div className="px-4">
           <div className="pt-5 pb-10 flex flex-col justify-center items-center">
-            <img src={cinema.img} alt={cinema} />
-            <p className="text-3xl">{cinema} Cinema</p>
+            <img src={cinema?.img} alt={cinema?.name} className="max-w-30" />
+            <p className="text-3xl">{cinema?.name} Cinema</p>
           </div>
           <div className="grid grid-rows-4 h-45 mb-10">
             {/* <div className="flex flex-col gap-4"> */}
@@ -30,14 +28,14 @@ function CardLeft() {
             </div>
             <div className="grid grid-cols-2">
               <p className="">
-                {new Date(bookingInfo.date).toLocaleDateString("en-GB", {
+                {new Date(date).toLocaleDateString("en-GB", {
                   weekday: "long",
                   // year: "numeric",
                   month: "long",
                   day: "numeric",
                 })}
               </p>
-              <p className="flex justify-end ">{bookingInfo.time}</p>
+              <p className="flex justify-end ">{time}</p>
             </div>
             <div className="grid grid-cols-2">
               <p>One ticket price</p>
@@ -45,7 +43,9 @@ function CardLeft() {
             </div>
             <div className="grid grid-cols-2 ">
               <p>Seat choosed</p>
-              <p className="inline text-wrap max-w-50 text-end  ">{selectedSeats.join(", ")}</p>
+              <p className="inline text-wrap max-w-50 text-end  ">
+                {selectedSeat.join(", ")}
+              </p>
             </div>
           </div>
           <hr className="border-gray-400 border-t-2" />

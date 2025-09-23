@@ -1,8 +1,8 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
+import React from "react";
+import { useSelector } from "react-redux";
 
 function Profile() {
-    const currentUser = useSelector((state) => state.auth.currentUser);
+  const currentUser = useSelector((state) => state.auth.currentUser);
   return (
     <>
       <aside
@@ -19,12 +19,10 @@ function Profile() {
           </div>
           <div id="two" className="flex flex-col items-center">
             <div>
-              <img src="/src/public/profil_.svg" alt="" />
+              <img src={`${import.meta.env.VITE_BE_HOST}/img/${currentUser?.data?.[0]?.image}`} alt="profile" className="rounded-full h-45 w-50" />
             </div>
             <div>
-              <p className="pb-5 text-[18px]">
-                {currentUser.email}
-              </p>
+              <p className="pb-5 text-[18px]">{currentUser?.data?.[0]?.first_name}{" "}{currentUser?.data?.[0]?.last_name}</p>
               <p className="text-[15px] text-gray-500 text-center">
                 Moviegoers
               </p>
@@ -45,13 +43,13 @@ function Profile() {
               <div className="pt-2 pl-3">Moviegoers</div>
               <div>
                 <img
-                  src="/src/public/eva_star-fill.svg"
+                  src="/eva_star-fill.svg"
                   alt=""
                   className="z-3 top-0 -right-1 absolute"
                 />
               </div>
               <div className="pl-3 pt-10">
-                320 <span>points</span>
+                {currentUser?.data?.[0]?.point}{" "}<span>points</span>
               </div>
               <div
                 id="oval"
@@ -79,4 +77,4 @@ function Profile() {
   );
 }
 
-export default Profile
+export default Profile;

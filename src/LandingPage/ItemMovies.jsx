@@ -2,64 +2,45 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { forwardRef } from "react";
 
-function reverseids(ids, genre) {
-  return ids.map((id) => {
-    const genreObj = genre.find((el) => id === el.id);
-    return genreObj ? genreObj.name : "";
-  });
-}
+// function reverseids(ids, genre) {
+//   // event.preventDefault();
+//   return ids.map((id) => {
+//     const genreObj = genre.find((el) => id === el.id);
+//     return genreObj ? genreObj.name : "";
+//   });
+// }
 
 // forwardRef memungkinkan parent mengakses ref dari komponen child.
 const ItemMovies = forwardRef((pros, ref) => {
   const [movies, setMovies] = useState([]);
-  const [genres, setGenres] = useState([]);
+  // const [genres, setGenres] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // Ambil genre
-        const genreRes = await fetch(
-          `https://api.themoviedb.org/3/genre/movie/list?api_key=${
-            import.meta.env.VITE_API_KEY
-          }`
+        const res = await fetch(
+          `${import.meta.env.VITE_BE_HOST}/movies/upcoming?page=1`
         );
-        const genreData = await genreRes.json();
-        setGenres(genreData.genres);
-
-        // Ambil movie populer
-        const movieRes = await fetch(
-          `https://api.themoviedb.org/3/movie/popular?api_key=${
-            import.meta.env.VITE_API_KEY
-          }`
-        );
-        const movieData = await movieRes.json();
-        const results = movieData.results;
-
-        // Format movie
-        const formatted = results.map((movie) => ({
+        const data = await res.json();
+        const formatted = data.data.map((movie) => ({
           id: movie.id,
-          gambar: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+          gambar: movie.poster_path,
           judul: movie.title,
-          genre_ids: movie.genre_ids, // untuk filter
-          genre: reverseids(movie.genre_ids, genreData.genres),
+          genre: movie.genres,
         }));
 
         setMovies(formatted);
-      } catch (error) {
-        console.log("Error fetching movies:", error);
+      } catch (err) {
+        console.error("Failed to fetch upcoming movies:", err);
       }
     }
-
     fetchData();
   }, []);
   return (
-    <section
-    ref={ref}
-      className="flex gap-3 justify-center overflow-x-scroll"
-    >
+    <section ref={ref} className="flex gap-3 justify-center overflow-x-scroll">
       {movies.map((film) => (
         <article
-          className="min-w-[270px] flex-shrink-1 rounded-lg shadow-xl p-4 bg-white"
+          className="min-w-[320px] min-h-[470px] flex-shrink-1 rounded-lg shadow-xl p-4 bg-white"
           key={film.id}
         >
           <Link to={`./detailmovies/${film.id}`}>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function Step() {
   return (
@@ -15,7 +15,7 @@ function Step() {
           {/* Step 1 */}
           <div className="text-center flex flex-col items-center">
             <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center mb-1">
-              <img src="/src/public/Vector.png" alt="Step 1 icon" />
+              <img src="/Vector.png" alt="Step 1 icon" />
             </div>
             <div className="text-xs text-gray-800">Dates And Time</div>
           </div>
@@ -48,4 +48,4 @@ function Step() {
   );
 }
 
-export default Step
+export default Step;

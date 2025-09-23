@@ -1,15 +1,13 @@
+import React from "react";
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
-import { useDispatch } from "react-redux";
-import { register } from "../redux/slice/authSlice";
 import { toast } from "sonner";
-// import { toast } from "sonner";
+import axios from "axios";
 
 function Register() {
   // untuk checkbox
   const [agreed, setAgreed] = useState(false);
-  const dispatch = useDispatch();
   const Navigate = useNavigate();
   const {
     email,
@@ -18,27 +16,37 @@ function Register() {
     setPassword,
     errorem,
     errorpass,
-    alertMsg,
     Validate,
   } = useAuth();
 
-  function submitHandler(event) {
+  const submitHandler = async (event) => {
     event.preventDefault();
     if (!Validate()) return;
-    if (email && password) {
-      dispatch(register({ email, password }));
-      toast.success("Akun Berhasil Dibuat");
+
+try {
+  const res = await axios.post(`${import.meta.env.VITE_BE_HOST}/auth/register`, {
+    email, 
+    password,
+  });
+
+  console.log(res)
+      if (res.status === 201 || res.status === 200) {
+      toast.success("Akun berhasil dibuat!");
       Navigate("/auth/login");
     }
-  }
+} catch (err) {
+  toast.error("Gagal Membuat akun")
+  console.log(err)
+}
+  };
 
   return (
     <>
-      <div className="bg-[url(/avengers.png)] flex flex-col justify-center items-center h-full">
+      <div className="bg-[url(/avengers.png)] bg-cover min-h-screen flex flex-col justify-center items-center">
         <div className="flex justify-center">
           <img
             src="/69ffcf42e23fbaa4462b7dee6db277d1b110ca93.png"
-            className="w-35"
+            className="w-45"
           />
         </div>
 
@@ -71,18 +79,7 @@ function Register() {
           </header>
 
           <form onSubmit={submitHandler}>
-            <span
-              className={`block min-h-[0.5rem] px-2 py-1 rounded ${
-                alertMsg === "akun berhasil dibuat"
-                  ? "bg-green-100 text-green-700"
-                  : alertMsg
-                  ? "bg-red-100 text-red-700"
-                  : ""
-              }`}
-            >
-              {alertMsg || "\u00A0"}
-            </span>
-            <section>
+            <section className="pt-5">
               <div className="input">
                 <label htmlFor="email">Email</label>
                 <input

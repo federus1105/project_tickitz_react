@@ -1,29 +1,32 @@
-import React, { useState } from "react";
-
-function Seat({ id, name, selectedSeats, onChange }) {
-  return (
-    <>
-      <div className=" w-7 h-7">
-        <label
-          htmlFor={id}
-          className={`block h-full rounded-sm ${
-            selectedSeats.includes(name) ? "bg-blue-700" : "bg-gray-400"
-          } cursor-pointer`}
-        ></label>
-        <input
-          id={id}
-          name={name}
-          onChange={onChange}
-          type="checkbox"
-          className="hidden"
-        ></input>
-      </div>
-    </>
-  );
-}
+import React from "react";
+import { OrderSeat } from "./Seat";
+import { useDispatch, useSelector } from "react-redux";
+import { selectSelectedSeats, toggleSeat } from "../redux/slice/orderSlice";
 
 function CardRight() {
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const dispatch = useDispatch();
+  // ambil data kursi dipilih
+  const selectedSeats = useSelector(selectSelectedSeats);
+
+  const rows = ["A", "B", "C", "D", "E", "F", "G"];
+
+  const generateSeats = (startCol) => {
+    const seats = [];
+    for (let row of rows) {
+      for (let col = startCol; col < startCol + 7; col++) {
+        seats.push(`${row}${col}`);
+      }
+    }
+    return seats;
+  };
+
+  const leftSeats = generateSeats(1);
+  const rightSeats = generateSeats(8);
+
+  const handleChange = (e) => {
+    dispatch(toggleSeat(e.target.name));
+  };
+
   return (
     <>
       <main>
@@ -34,79 +37,53 @@ function CardRight() {
           <span className="flex justify-center text-gray-500 pb-5">Screen</span>
           <hr className="pb-5 mx-18 border-t-3 border-gray-200" />
         </div>
+
         <div className="grid grid-cols-2 ml-18 mr-17 gap-23 max-lg:gap-10 max-lg:mx-8">
           <div className="one">
             <div className="grid grid-cols-7 grid-rows-7 gap-y-2 gap-x-1">
-              {(function () {
-                const result = [];
-                for (let i = 0; i < 49; i++) {
-                  result.push(
-                    <Seat
-                      key={i}
-                      id={i}
-                      name={`seat-${i}`}
-                      selectedSeats={selectedSeats}
-                      onChange={(e) => {
-                        setSelectedSeats((selectedSeats) => {
-                          if (selectedSeats.includes(e.target.name)) {
-                            return selectedSeats.filter(
-                              (seat) => seat !== e.target.name
-                            );
-                          }
-                          return [...selectedSeats, e.target.name];
-                        });
-                      }}
-                    />
-                  );
-                }
-                return result;
-              })()}
+              {leftSeats.map((seatId) => (
+                <OrderSeat
+                  key={seatId}
+                  id={seatId}
+                  name={seatId}
+                  selectedSeats={selectedSeats}
+                  onChange={handleChange}
+                />
+              ))}
             </div>
+
             <div className="grid grid-cols-7 mt-5">
-              <span className="text-center">1</span>
-              <span className="text-center">2</span>
-              <span className="text-center">3</span>
-              <span className="text-center">4</span>
-              <span className="text-center">5</span>
-              <span className="text-center">6</span>
-              <span className="text-center">7</span>
+              {Array.from({ length: 7 }, (_, i) => (
+                <div
+                  key={i}
+                  className="w-8 h-8 text-sm text-center text-gray-700"
+                >
+                  {i + 1}
+                </div>
+              ))}
             </div>
           </div>
           <div className="two">
             <div className="grid grid-cols-7 grid-rows-7 gap-y-2 gap-x-1">
-              {(function () {
-                const result = [];
-                for (let i = 49; i < 98; i++) {
-                  result.push(
-                    <Seat
-                      key={i}
-                      id={i}
-                      name={`seat-${i}`}
-                      selectedSeats={selectedSeats}
-                      onChange={(e) => {
-                        setSelectedSeats((selectedSeats) => {
-                          if (selectedSeats.includes(e.target.name)) {
-                            return selectedSeats.filter(
-                              (seat) => seat !== e.target.name
-                            );
-                          }
-                          return [...selectedSeats, e.target.name];
-                        });
-                      }}
-                    />
-                  );
-                }
-                return result;
-              })()}
+              {rightSeats.map((seatId) => (
+                <OrderSeat
+                  key={seatId}
+                  id={seatId}
+                  name={seatId}
+                  selectedSeats={selectedSeats}
+                  onChange={handleChange}
+                />
+              ))}
             </div>
             <div className="grid grid-cols-7 mt-5">
-              <span className="text-center">8</span>
-              <span className="text-center">9</span>
-              <span className="text-center">10</span>
-              <span className="text-center">11</span>
-              <span className="text-center">12</span>
-              <span className="text-center">13</span>
-              <span className="text-center">14</span>
+              {Array.from({ length: 7 }, (_, i) => (
+                <div
+                  key={i + 7}
+                  className="w-8 h-8 text-sm text-center text-gray-700"
+                >
+                  {i + 8}
+                </div>
+              ))}
             </div>
           </div>
         </div>

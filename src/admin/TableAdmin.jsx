@@ -1,11 +1,59 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router";
+import { toast } from "sonner";
 
 function TableAdmin() {
+  const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  const token = useSelector((state) => state.auth.token);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_BE_HOST}/movies/admin?page=${page}`
+        );
+        const data = await res.json();
+        const formatted = data.data.map((movie) => ({
+          id: movie.id,
+          gambar: movie.poster_path,
+          judul: movie.title,
+          genre: movie.genres,
+          release: movie.release_date,
+          durasi: movie.duration,
+        }));
+        setMovies(formatted);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchData();
+  }, [page]);
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BE_HOST}/movies/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMovies((prev) => prev.filter((movie) => movie.id !== id));
+        toast.success("Berhasil Menghapus movie");
+      } else {
+        console.error("Delete failed:", data?.message || "Unknown error");
+        toast.error("Gagal Menghapus Data");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <main className="mx-28">
-        <div className="border mt-10 rounded-lg h-130">
+        <div className="border mt-10 rounded-lg min-h-screen w-full flex flex-col">
           <div className="px-8 py-5 grid grid-cols-[5fr_1fr_1fr]">
             <h1 className="flex items-center font-medium">List Movie</h1>
             <div>
@@ -20,10 +68,10 @@ function TableAdmin() {
               to="../addmovies"
               className="bg-blue-700 rounded-md w-fit text-white px-6 text-xs flex justify-center items-center"
             >
-              Add Movies
+              Add Movie
             </Link>
           </div>
-          <table className="mx-8 w-full text-sm border-separate border-spacing-y-4">
+          <table className="mx-4 w-full text-sm border-separate border-spacing-y-4">
             <thead className="">
               <tr className="">
                 <th>No</th>
@@ -36,42 +84,69 @@ function TableAdmin() {
               </tr>
             </thead>
             <tbody className="text-center">
-              <tr>
-                <td>1</td>
-                <td>Gambar</td>
-                <td>Spiderman HomeComing</td>
-                <td>Action, Adventure</td>
-                <td>07/05/2025</td>
-                <td>2 Hours 15 Minute</td>
-                <td className="flex gap-3">
-                  <button className="cursor-pointer hover:brightness-90">
-                    <img src="/read.png" alt="" />
-                  </button>
-                  <button className="cursor-pointer hover:brightness-90">
-                    <img src="/edit.png" alt="" />
-                  </button>
-                  <button className="cursor-pointer hover:brightness-90">
-                    <img src="/delete.png" alt="" />
-                  </button>
-                </td>
-              </tr>
+              {movies.map((film, index) => {
+                return (
+                  <tr key={film.id}>
+                    <td>{(page - 1) * 20 + index + 1}</td>
+                    <td>
+                      <img
+                        src={`http://localhost:8080/img/${film.gambar}`}
+                        alt={film.judul}
+                        className="w-10 h-10 rounded-full mx-auto"
+                      />
+                    </td>
+                    <td>{film.judul}</td>
+                    <td>
+                      {typeof film.genre === "string"
+                        ? film.genre.split(",  ").map((g, idx) => (
+                            <span
+                              key={idx}
+                              // className="mr-2 bg-gray-200 px-2 py-0.5 mt-1 rounded-xl inline-block"
+                            >
+                              {g}
+                            </span>
+                          ))
+                        : "No genre"}
+                    </td>
+                    <td>{film.release}</td>
+                    <td>{film.durasi}</td>
+                    <td className="flex gap-3 justify-center">
+                      <button className="cursor-pointer">
+                        <img src="/read.png" />
+                      </button>
+                        <Link to={`../editmovies/${film.id}`}>
+                          <button className="cursor-pointer">
+                            <img src="/edit.png" />
+                          </button>
+                        </Link>
+                      <button
+                        className="cursor-pointer"
+                        onClick={() => handleDelete(film.id)}
+                      >
+                        <img src="/delete.png" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+
+              {/* <tr></tr> */}
             </tbody>
           </table>
-          <hr className="border-t-gray-400" />
+          {/* <hr className="border-t-gray-400" /> */}
         </div>
         <div className="mt-10 flex justify-center gap-4 mb-6 ">
-          <button className="cursor-pointer bg-blue-700 text-white py-1.5 px-4 rounded-sm">
-            1
-          </button>
-          <button className="cursor-pointer border-1 border-gray-400 px-3 rounded-sm">
-            2
-          </button>
-          <button className="cursor-pointer border-1  border-gray-400 px-3 rounded-sm">
-            3
-          </button>
-          <button className="cursor-pointer border-1   border-gray-400 px-3 rounded-sm">
-            4
-          </button>
+          {[1, 2, 3, 4].map((p) => (
+            <button
+              key={p}
+              onClick={() => setPage(p)}
+              className={`cursor-pointer py-1.5 px-4 rounded-sm ${
+                page === p ? "bg-blue-700 text-white" : "border border-gray-400"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
         </div>
       </main>
     </>

@@ -1,11 +1,11 @@
-// import React, { useState } from 'react'
+import React from 'react'
 import DetailProfil from "./DetailProfil";
 import OrderHistory from "./OrderHistory";
 
 function SettingProfile({ Choose, SetChoose }) {
   return (
     <>
-      <div id="setting" className="w-210 h-16 bg-white rounded-lg max-lg:w-155">
+      <div id="setting" className="w-220 h-16 bg-white rounded-lg max-lg:w-155">
         <div className="flex text-[18px] gap-10 py-[19px] px-[50px] max-lg:justify-around">
           <div>
             <button

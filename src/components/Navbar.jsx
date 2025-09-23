@@ -17,7 +17,6 @@ function Navbar() {
     dispatch(logout());
     Navigate("../movies/");
   };
-
   //Untuk Menampilkan Logout
   const toggleDropdown = () => {
     setShowDropdown((prev) => !prev);
@@ -45,12 +44,12 @@ function Navbar() {
           </>
         ) : (
           <div className="flex items-center gap-1">
-            <p className="pr-1">Halo! {currentUser.email.split("@")[0]} 😄</p>
+            <p className="pr-1">Halo! {currentUser?.data?.[0]?.first_name} 😄</p>
             <div className="relative">
               <img
-                src="/Ellipse 11.svg"
+                src={`${import.meta.env.VITE_BE_HOST}/img/${currentUser?.data?.[0]?.image}`}
                 alt="profile"
-                className="w-10 h-10 cursor-pointer"
+                className="w-10 h-10 cursor-pointer rounded-full"
                 onClick={toggleDropdown}
               />
               {showDropdown && (

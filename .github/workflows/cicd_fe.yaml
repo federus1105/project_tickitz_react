@@ -26,3 +26,4 @@ jobs:
           context: . # Direktori tempat Dockerfile berada
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ github.sha }} # Nama image dengan tag unik
+          

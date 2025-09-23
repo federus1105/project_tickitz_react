@@ -9,8 +9,8 @@ function ProfilePage() {
   const [Choose, SetChoose] = useState("settings");
   return (
     <>
-      <div className="bg-[#dedede] min-h-screen w-full">
-        <main className="mt-17 mr-28 ml-28 max-lg:mx-18.5">
+      <div className="bg-[#dedede]">
+        <main className="pt-20 flex justify-center max-lg:mx-18.5">
           <div id="content" className="flex gap-8 max-lg:block">
             <Profile />
             <section>
