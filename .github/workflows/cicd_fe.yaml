@@ -25,6 +25,6 @@ jobs:
         with:
           context: . # Direktori tempat Dockerfile berada
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository }}:latest
           buildArgs: VITE_HOST=http://api # Nama image dengan tag unik
           
