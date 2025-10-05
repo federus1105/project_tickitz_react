@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 ARG VITE_BE_HOST
-ENV VITE_API=$VITE_BE_HOST
+ENV VITE_BE_HOST=$VITE_BE_HOST
 
 # build dengan command vite build
 RUN npm run build
