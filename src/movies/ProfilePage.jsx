@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Profile from "../profilpage/Profile";
 import SettingProfile from "../profilpage/SettingProfile";
 import DetailProfil from "../profilpage/DetailProfil";
-import Account from "../profilpage/Account";
 import OrderHistory from "../profilpage/OrderHistory";
 
 function ProfilePage() {

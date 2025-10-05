@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 function Header() {
-  const movie = useSelector((state) => state.order.selectedMovie);
+  const movie = useSelector((state) => state.order.bookingInfo.selectedMovie);
   const bookingInfo = useSelector((state) => state.order.bookingInfo);
 
   if (!movie) {
@@ -18,7 +18,7 @@ function Header() {
         <div className="border-1 border-gray-400 grid grid-cols-[1fr_3fr_1fr] p-3.5">
           <div className="">
             <img
-              src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+              src={`http://localhost:8080/img/${movie.poster_path}`}
               alt={movie.title}
               className="h-full w-full"
             />
@@ -28,10 +28,12 @@ function Header() {
               <h2 className="text-xl">{movie.title}</h2>
             </div>
             <div className="flex gap-2 my-2">
-              {movie.genres?.slice(0, 2).map((genre) => (
+              {movie.genres?.slice(0, 2).map((genres) => (
+                <>
                 <button className="bg-gray-300 rounded-2xl px-3 py-0.5 text-gray-500">
-                  {genre.name}
+                  {genres}
                 </button>
+                </>
               ))}
             </div>
             <div>

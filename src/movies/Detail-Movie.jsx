@@ -27,7 +27,6 @@ function DetailMovie() {
           throw new Error(`Server error: ${res.status}`);
         }
         const data = await res.json();
-        // console.log("Movie data:", data);
         setMovie(data.data[0]);
       } catch (error) {
         console.error("Failed to fetch movie detail:", error);
@@ -39,10 +38,10 @@ function DetailMovie() {
   // Cek data sudah ada atau belum
   if (!movie) return <div className="ml-28 mt-10 ">Loading...</div>;
 
-  // Data yang di perlukan
+  // Data yang di tampilkan
   const {
-    image,
-    backdrop,
+    poster_path,
+    backdrop_path,
     title,
     release_date,
     duration,
@@ -51,17 +50,12 @@ function DetailMovie() {
     actor,
     synopsis,
   } = movie;
-
-  const durationText = duration
-    ? `${Math.floor(duration / 60)} hours ${duration % 60} minutes`
-    : "N/A";
-
   const handdleBook = () => {
     dispatch(
       setSelectedMovie({
         id,
         title,
-        image,
+        poster_path,
         genres,
       })
     );
@@ -70,9 +64,11 @@ function DetailMovie() {
   return (
     <>
       <div>
-        <img src={backdrop} 
-        alt={title} 
-        className="w-full h-100 object-cover" />
+        <img
+          src={`http://localhost:8080/img/${[backdrop_path]}`}
+          alt={title}
+          className="w-full h-100 object-cover"
+        />
       </div>
       <main className="ml-28 mr-28">
         <section>
@@ -81,7 +77,7 @@ function DetailMovie() {
               <section className="flex gap-12 mt-3">
                 <div className="absolute top-78 left-28 max-lg:top-92">
                   <img
-                    src={`http://localhost:8080/img/${image}`}
+                    src={`http://localhost:8080/img/${[poster_path]}`}
                     alt={title}
                     className="rounded-md w-[250px]"
                   />
@@ -91,14 +87,6 @@ function DetailMovie() {
                     {title}
                   </h2>
                   <div className="flex gap-2 mb-4 pl-67 max-lg:flex-wrap">
-                    {/* {genres.map((genre) => (
-                      <span
-                        key={genre.id}
-                        className="bg-gray-200 px-3 py-1 rounded-full text-sm text-gray-400"
-                      >
-                        {genre.name}
-                      </span>
-                    ))} */}
                     {genres.map((genre, index) => (
                       <span
                         key={index}
@@ -119,7 +107,7 @@ function DetailMovie() {
                     </div>
                     <div>
                       <p className="text-gray-400">Duration</p>
-                      <p>{durationText}</p>
+                      <p>{duration || "Unknown"}</p>
                     </div>
                     <div>
                       <p className="text-gray-400">Casts</p>
@@ -138,23 +126,9 @@ function DetailMovie() {
           </header>
         </section>
         <Books />
-        <Cinemas />
+        {/* <Cinemas /> */}
 
         <section>
-          {/* <div className="mt-10 flex justify-center gap-4 ">
-            <button className="cursor-pointer bg-blue-700 text-white py-1.5 px-4 rounded-sm">
-              1
-            </button>
-            <button className="cursor-pointer border-1 px-3 rounded-sm">
-              2
-            </button>
-            <button className="cursor-pointer border-1 px-3 rounded-sm">
-              3
-            </button>
-            <button className="cursor-pointer border-1 px-3 rounded-sm">
-              4
-            </button>
-          </div> */}
           <div className="flex justify-center my-13 ">
             <button onClick={handdleBook}>
               <Link

@@ -4,16 +4,18 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // default: localStorage
 import { combineReducers } from "redux";
 import orderReducer from "./slice/orderSlice";
+import historyReducer from './thunk/historyThunk';
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth"],
 };
 
 const rootReducer = combineReducers({
   auth: userReducer,
   order: orderReducer,
+  history: historyReducer,
+  
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

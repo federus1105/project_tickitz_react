@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,10 @@ import { loginUser } from "../redux/thunk/authThunk";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
   const {
     email,
     setEmail,
@@ -25,7 +29,7 @@ function Login() {
     try {
       const userData = await dispatch(loginUser({ email, password }));
 
-       toast.success("Login Berhasil!");
+      toast.success("Login Berhasil!");
 
       if (userData && userData.role === "Admin") {
         navigate("/admin/");
@@ -65,33 +69,36 @@ function Login() {
               className="w-full border p-3 rounded-sm mt-2.5 border-gray-600"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              // required
             />
             <span className="block text-red-500 min-h-[1.5rem]">{errorem}</span>
-
-            <label htmlFor="password" className="mt-4 block">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter your Password"
-              className="w-full h-13 border p-3 rounded-sm mt-2.5 border-gray-600"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              // required
-            />
-            <span className="block text-red-500 min-h-[1.5rem]">
-              {errorpass}
-            </span>
+            <div className="flex flex-col bg-[#ffffff] gap-3">
+              <label htmlFor="password">Password</label>
+              <div className="input-password flex items-center border border-t border-gray-300 bg-[#ffffff] rounded-[8px] py-1.5 px-2.5 w-full gap-3 h-11">
+                <img src="/Logo-Password.svg" alt="" className="w-4 h-3.5" />
+                <input
+                  type={isPasswordVisible ? "text" : "password"}
+                  id="password"
+                  placeholder="Enter Your Password"
+                  className="w-full outline-none"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <img
+                  src={
+                    isPasswordVisible ? "/Logo-Eye.svg" : "/Logo-Eye-Close.svg"
+                  }
+                  alt=""
+                  className="w-4 h-3.5 cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                />
+              </div>
+            </div>
+          <span className="block text-red-500 min-h-[1.5rem]">{errorpass}</span>
           </section>
-
           <section className="my-2 flex justify-between text-blue-700">
             <Link to="../forget">Forgot your Password?</Link>
             <Link to="../">Register</Link>
           </section>
-
           <button
             type="submit"
             className="cursor-pointer bg-blue-700 text-white rounded-sm my-4 w-full h-12"

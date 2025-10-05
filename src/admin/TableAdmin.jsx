@@ -7,6 +7,9 @@ function TableAdmin() {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const token = useSelector((state) => state.auth.token);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [movieToDelete, setMovieToDelete] = useState(null);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -111,24 +114,57 @@ function TableAdmin() {
                     <td>{film.release}</td>
                     <td>{film.durasi}</td>
                     <td className="flex gap-3 justify-center">
-                      <button className="cursor-pointer">
+                      {/* <button className="cursor-pointer">
                         <img src="/read.png" />
-                      </button>
-                        <Link to={`../editmovies/${film.id}`}>
-                          <button className="cursor-pointer">
-                            <img src="/edit.png" />
-                          </button>
-                        </Link>
+                      </button> */}
+                      <Link to={`../editmovies/${film.id}`}>
+                        <button className="cursor-pointer">
+                          <img src="/edit.png" />
+                        </button>
+                      </Link>
                       <button
                         className="cursor-pointer"
-                        onClick={() => handleDelete(film.id)}
+                        onClick={() => {
+                          setMovieToDelete(film); // simpan film yang mau dihapus
+                          setIsDeleteModalOpen(true); // buka modal konfirmasi
+                        }}
                       >
-                        <img src="/delete.png" />
+                        <img src="/delete.png" alt="Delete" />
                       </button>
                     </td>
                   </tr>
                 );
               })}
+              {isDeleteModalOpen && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                  <div className="bg-white p-6 rounded-xl w-[400px]">
+                    <h2 className="text-lg text-black mb-4">
+                      Apakah kamu yakin ingin menghapus movie{" "}
+                      <span className="text-red-700 font-medium">
+                        {movieToDelete?.judul || ""}
+                      </span>
+                      ?
+                    </h2>
+                    <div className="flex justify-end gap-4">
+                      <button
+                        className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500 text-white"
+                        onClick={() => setIsDeleteModalOpen(false)}
+                      >
+                        Batal
+                      </button>
+                      <button
+                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                        onClick={() => {
+                          handleDelete(movieToDelete.id);
+                          setIsDeleteModalOpen(false);
+                        }}
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* <tr></tr> */}
             </tbody>

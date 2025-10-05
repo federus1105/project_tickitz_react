@@ -1,0 +1,211 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setBookingInfo, setCinema } from "../redux/slice/orderSlice";
+import { useParams } from "react-router";
+
+function Books() {
+  const token = useSelector((state) => state.auth.token);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const bookingInfo = useSelector((state) => state.order.bookingInfo);
+  const selectedCinema = useSelector((state) => state.order.cinema);
+
+  const [scheduleOptions, setScheduleOptions] = useState([]);
+
+  useEffect(() => {
+    if (!id) return;
+    (async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_BE_HOST}/schedule/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const result = await res.json();
+        if (res.ok) {
+          setScheduleOptions(result.data);
+        }
+      } catch (err) {
+        console.error("Failed fetch schedules:", err);
+      }
+    })();
+  }, [id]);
+
+  // Filter schedule berdasarkan pilihan (date, time, location)
+  const filteredSchedules = scheduleOptions.filter((sch) => {
+    if (bookingInfo.date && sch.date !== bookingInfo.date) return false;
+    if (bookingInfo.time && sch.time !== bookingInfo.time) return false;
+    if (bookingInfo.location && sch.location !== bookingInfo.location)
+      return false;
+    return true;
+  });
+
+  // Dari filteredSchedules ambil objek cinema unik
+  const cinemas = filteredSchedules
+    .map((sch) => sch.cinema)
+    .filter((c) => c != null);
+
+  const uniqueCinemas = Array.from(
+    cinemas.reduce((map, c) => {
+      map.set(c.id, c);
+      return map;
+    }, new Map())
+  ).map(([_, c]) => c);
+
+  return (
+    <section>
+      <div id="books">
+        <h2 className="my-8 text-3xl max-lg:text-2xl">Book Tickets</h2>
+        <div
+          id="info"
+          className="grid grid-cols-4 gap-9 max-lg:flex max-lg:flex-wrap"
+        >
+          {/* Date */}
+          <div className="flex flex-col w-60 relative">
+            <label className="pb-3">Choose date</label>
+            <select
+              className="w-full h-12 bg-gray-200 px-5 rounded-md appearance-none"
+              onChange={(e) =>
+                dispatch(
+                  setBookingInfo({
+                    ...bookingInfo,
+                    date: e.target.value,
+                    time: "",
+                    location: "",
+                  })
+                )
+              }
+              value={bookingInfo.date}
+            >
+              <option value="">-- Pilih tanggal --</option>
+              {scheduleOptions
+                .map((sch) => sch.date)
+                .filter((d, idx, arr) => arr.indexOf(d) === idx)
+                .map((d, idx) => (
+                  <option key={idx} value={d}>
+                    {d}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          {/* Time */}
+          <div className="flex flex-col w-60 relative">
+            <label className="pb-3">Choose Time</label>
+            <select
+              className="w-full h-12 bg-gray-200 px-5 rounded-md appearance-none"
+              onChange={(e) =>
+                dispatch(
+                  setBookingInfo({
+                    ...bookingInfo,
+                    time: e.target.value,
+                    location: "",
+                  })
+                )
+              }
+              value={bookingInfo.time}
+              disabled={!bookingInfo.date}
+            >
+              <option value="">-- Pilih Waktu --</option>
+              {scheduleOptions
+                .filter((sch) => sch.date === bookingInfo.date)
+                .map((sch) => sch.time)
+                .filter((t, idx, arr) => arr.indexOf(t) === idx)
+                .map((t, idx) => (
+                  <option key={idx} value={t}>
+                    {t}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          {/* Location */}
+          <div className="flex flex-col w-60 relative">
+            <label className="pb-3">Choose Location</label>
+            <select
+              className="w-full h-12 bg-gray-200 px-5 rounded-md appearance-none"
+              onChange={(e) =>
+                dispatch(
+                  setBookingInfo({
+                    ...bookingInfo,
+                    location: e.target.value,
+                  })
+                )
+              }
+              value={bookingInfo.location}
+              disabled={!bookingInfo.time}
+            >
+              <option value="">-- Pilih Lokasi --</option>
+              {scheduleOptions
+                .filter(
+                  (sch) =>
+                    sch.date === bookingInfo.date &&
+                    sch.time === bookingInfo.time
+                )
+                .map((sch) => sch.tocation)
+                .filter((loc, idx, arr) => arr.indexOf(loc) === idx)
+                .map((loc, idx) => (
+                  <option key={idx} value={loc}>
+                    {loc}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          {/* Filter button (opsional) */}
+          <div className="flex items-end">
+            <button
+              onClick={() => {
+                // bisa do something, namun rendering cinema otomatis berdasarkan bookingInfo
+              }}
+              className="bg-blue-700 text-white w-40 h-12 rounded-md mt-9"
+            >
+              Filter
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        {uniqueCinemas.length > 0 ? (
+          uniqueCinemas.map((cinema) => (
+            <label
+              key={cinema.id}
+              className={`border p-4 flex items-center gap-4 cursor-pointer transition-all duration-300 ${
+                selectedCinema?.id === cinema.id ? "bg-blue-700" : "bg-white"
+              }`}
+            >
+              <input
+                type="radio"
+                name="cinema"
+                value={cinema}
+                checked={selectedCinema?.id === cinema}
+                onChange={() => dispatch(setCinema(cinema))}
+                className="hidden"
+              />
+              <img src={cinema.image} alt={cinema.name} className="w-24 h-auto" />
+              <span>{cinema.name}</span>
+            </label>
+          ))
+        ) : (
+          <p className="mt-4">No cinemas available for selected filter</p>
+        )}
+      </div>
+    </section>
+  );
+}
+
+export default Books;
+
+
+  // const filteredSchedules = scheduleOptions.filter((sch) => {
+  //   // hanya masukkan jadwal yang cocok dengan semua kondisi yang sudah dipilih
+  //   if (date && sch.date !== date) return false;
+  //   if (time && sch.time !== time) return false;
+  //   if (location && sch.location !== location) return false;
+  //   return true;
+  // });
+
+  // Extract unique cinemas from scheduleOptions

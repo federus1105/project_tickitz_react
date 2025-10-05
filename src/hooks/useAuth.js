@@ -41,13 +41,8 @@ function useAuth(initialValues = { email: "", password: "" }) {
     } else if (!RegexKecil.test(password)) {
       setErrorPass("Minimal harus ada huruf kecil");
       valid = false;
-    } else if (!RegexBesar.test(password)) {
-      setErrorPass("Harus ada huruf Besar");
-      valid = false;
-    } else if (!Spesial.test(password)) {
-      setErrorPass("harus ada karakter spesial !@#$%^&*/<>");
-      valid = false;
-    } else {
+    } 
+    else {
       /* Jika input email benar tetapi password salah, input email tidak akan
   muncul di console harus kedua nya benar */
       setErrorem("");

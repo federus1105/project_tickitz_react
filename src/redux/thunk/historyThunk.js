@@ -11,7 +11,8 @@ export const fetchHistory = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      return res.data[0];
+      console.log(res.data)
+      return res.data.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data || err.message);
     }
@@ -22,8 +23,6 @@ const historySlice = createSlice({
   name: 'history',
   initialState: {
     data: [],
-    // loading: false,
-    // error: null,
   },
   reducers: {},
   extraReducers: (builder) => {

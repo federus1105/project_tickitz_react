@@ -13,8 +13,8 @@ export const selectTotalPrice = (state) =>
 
 
 const initialState = {
-  selectedMovie: null,
   bookingInfo: {
+    selectedMovie: null,
     date: "",
     time: "",
     location: "",
@@ -23,6 +23,7 @@ const initialState = {
     fullname: "",
     phone: "",
     payment: null,
+    cinema: [],
   },
 };
 
@@ -31,7 +32,7 @@ const orderSlice = createSlice({
   initialState,
   reducers: {
     setCinema: (state, action) => {
-      state.cinema = action.payload;
+      state.bookingInfo.cinema = action.payload;
     },
     setDataFullname: (state, action) => {
       state.bookingInfo.fullname = action.payload;
@@ -40,7 +41,7 @@ const orderSlice = createSlice({
       state.bookingInfo.phone = action.payload;
     },
     setSelectedMovie: (state, action) => {
-      state.selectedMovie = action.payload;
+      state.bookingInfo.selectedMovie = action.payload;
     },
     setBookingInfo: (state, action) => {
       state.bookingInfo = { ...state.bookingInfo, ...action.payload };

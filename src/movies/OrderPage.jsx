@@ -8,9 +8,9 @@ function OrderPage() {
   return (
     <>
       <body className="bg-gray-100">
-        <main className="mx-29">
+        <main className="">
           <Step />
-          <div className="flex gap-5 max-lg:flex-wrap max-lg:gap-0 max-lg:pb-25">
+          <div className="flex gap-20 max-lg:flex-wrap max-lg:gap-0 max-lg:pb-25 justify-center">
             <div className="rounded-sm bg-white w-170 mb-30">
               <Header />
               <CardRight />

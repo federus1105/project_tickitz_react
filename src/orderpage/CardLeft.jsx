@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import { selectTotalPrice } from "../redux/slice/orderSlice";
 
 function CardLeft() {
-  const movie = useSelector((state) => state.order.selectedMovie);
-  const cinema = useSelector((state) => state.order.cinema);
+  const movie = useSelector((state) => state.order.bookingInfo.selectedMovie);
+  const cinema = useSelector((state) => state.order.bookingInfo.cinema);
   const seatPrice = useSelector(selectTotalPrice);
   const { date, time, selectedSeat } = useSelector(
     (state) => state.order.bookingInfo
@@ -15,7 +15,7 @@ function CardLeft() {
       <section className="bg-white h-full w-110 rounded-md">
         <div className="px-4">
           <div className="pt-5 pb-10 flex flex-col justify-center items-center">
-            <img src={cinema?.img} alt={cinema?.name} className="max-w-30" />
+            <img src={cinema?.image} alt={cinema?.name} className="max-w-30" />
             <p className="text-3xl">{cinema?.name} Cinema</p>
           </div>
           <div className="grid grid-rows-4 h-45 mb-10">
@@ -23,7 +23,11 @@ function CardLeft() {
             <div className="grid grid-cols-2">
               <p>Movie Selected</p>
               <p className="flex justify-end">
-                {movie.title.substring(0, 12)}...
+                {movie?.title
+                  ? movie.title.length > 12
+                    ? movie.title.substring(0, 12) + "..."
+                    : movie.title
+                  : "No movie selected"}
               </p>
             </div>
             <div className="grid grid-cols-2">

@@ -38,7 +38,7 @@ function Account() {
       toast.error(validationError);
       return;
     }
-    try {
+    try { 
       const res = await fetch(
         `${import.meta.env.VITE_BE_HOST}/auth/reset_Password`,
         {
@@ -57,7 +57,7 @@ function Account() {
       if (!res.ok) {
         const err = await res.text();
         throw new Error(err);
-      }
+      } 
 
       const data = await res.json();
       toast.success("Berhasil Mengubah Password!");

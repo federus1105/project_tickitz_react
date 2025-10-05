@@ -1,25 +1,25 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
-import Login from "./auth/Login";
-import Register from "./auth/Register";
-import Forget from "./auth/ForgetPass";
-import Index from "./movies/Index";
-import ListMovie from "./movies/ListMovie";
-import Payment_Modal from "./movies/Payment_Modal";
-import DetailMovie from "./movies/Detail-Movie";
-import TicketResult from "./movies/TicketResult";
-import ProfilePage from "./movies/ProfilePage";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import OrderPage from "./movies/OrderPage";
-import AdminPage from "./admin/AdminPage";
-import TableAdmin from "./admin/TableAdmin";
-import AddMovies from "./admin/AddMovies";
-import NavbarAdmin from "./components/NavbarAdmin";
-import { PrivateRoute } from "./components/PrivateRoute";
+import Login from "../auth/Login";
+import Register from "../auth/Register";
+import Forget from "../auth/ForgetPass";
+import Index from "../movies/Index";
+import ListMovie from "../movies/ListMovie";
+import Payment_Modal from "../movies/Payment_Modal";
+import DetailMovie from "../movies/Detail-Movie";
+import TicketResult from "../movies/TicketResult";
+import ProfilePage from "../movies/ProfilePage";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import OrderPage from "../movies/OrderPage";
+import AdminPage from "../admin/AdminPage";
+import TableAdmin from "../admin/TableAdmin";
+import AddMovies from "../admin/AddMovies";
+import NavbarAdmin from "../components/NavbarAdmin";
+import { PrivateRoute } from "../components/PrivateRoute";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import EditMovie from "./admin/EditMovie";
+import EditMovie from "../admin/EditMovie";
 
 function Router() {
   return (

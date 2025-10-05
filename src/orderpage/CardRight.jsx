@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { OrderSeat } from "./Seat";
 import { useDispatch, useSelector } from "react-redux";
 import { selectSelectedSeats, toggleSeat } from "../redux/slice/orderSlice";
+import axios from "axios";
+import { data } from "react-router";
 
 function CardRight() {
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const [seatsData, setSeatsData] = useState([]);
+  const id = useSelector((state) => state.order.bookingInfo.cinema?.id);
   // ambil data kursi dipilih
   const selectedSeats = useSelector(selectSelectedSeats);
 
@@ -20,8 +25,40 @@ function CardRight() {
     return seats;
   };
 
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchSeats = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BE_HOST}/seats/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setSeatsData(response.data); // asumsi: bentuk array [{ id: 1, codeseat: "A1", is_sold: true }, ...]
+      } catch (err) {
+        console.error("Failed fetching seats", err);
+      }
+    };
+
+    fetchSeats();
+  }, [id]);
+
   const leftSeats = generateSeats(1);
   const rightSeats = generateSeats(8);
+  // const leftSeats = seatsData.filter((seat) => {
+  //   const col = parseInt(seat.codeseat.slice(1)); // "A1" → 1
+  //   return col >= 1 && col <= 7;
+  // });
+
+  // const rightSeats = seatsData.filter((seat) => {
+  //   const col = parseInt(seat.codeseat.slice(1));
+  //   return col >= 8 && col <= 14;
+  // });
 
   const handleChange = (e) => {
     dispatch(toggleSeat(e.target.name));
@@ -43,11 +80,12 @@ function CardRight() {
             <div className="grid grid-cols-7 grid-rows-7 gap-y-2 gap-x-1">
               {leftSeats.map((seatId) => (
                 <OrderSeat
-                  key={seatId}
-                  id={seatId}
-                  name={seatId}
+                  key={seatId.codeseat}
+                  id={seatId.codeseat}
+                  name={seatId.codeseat}
                   selectedSeats={selectedSeats}
                   onChange={handleChange}
+                  isSold={seatId.is_sold}
                 />
               ))}
             </div>
