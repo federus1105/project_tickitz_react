@@ -22,7 +22,7 @@ function ItemMovies({ selectedGenres, searchTerm, page }) {
     async function fetchData() {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_BE_HOST}movies/?${params.toString()}`
+          `${import.meta.env.VITE_BE_HOST}/movies/?${params.toString()}`
         );
         const data = await res.json();
         const formatted = data.data.map((movie) => ({
