@@ -19,7 +19,7 @@ const ItemMovies = forwardRef((pros, ref) => {
     async function fetchData() {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_BE_HOST}/movies/upcoming?page=1`
+          `${import.meta.env.VITE_BE_HOST}movies/upcoming?page=1`
         );
         const data = await res.json();
         const formatted = data.data.map((movie) => ({
@@ -28,7 +28,6 @@ const ItemMovies = forwardRef((pros, ref) => {
           judul: movie.title,
           genre: movie.genres,
         }));
-
         setMovies(formatted);
       } catch (err) {
         console.error("Failed to fetch upcoming movies:", err);
